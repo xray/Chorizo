@@ -3,6 +3,7 @@
 *.pdb
 *.DS_Store
 .vscode/
+.ieaa/
 
 
 #Visual Studio files

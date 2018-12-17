@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <AssemblyName>Chipotle</AssemblyName>
+        <RootNamespace>Chipotle</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\src\ChorizoFW.csproj" />
+    </ItemGroup>
+
+</Project>

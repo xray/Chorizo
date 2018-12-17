@@ -1,16 +1,15 @@
 using Xunit;
-using Chorizo;
+using ChorizoFW;
+using Moq;
 
-namespace Chorizo.UnitTests.Server
+namespace ChorizoFW.UnitTests.Server
 {
-  public class Server_PrinterShould
+  public class Chorizo_PrinterShould
   {
     [Fact]
     public void ReturnTrueGivenTrue()
     {
-      var result = Chorizo.Server.Printer();
-
-      Assert.False(result, "Printer should return False");
+      // var app = Chorizo.Listen(5000);
     }
   }
 }

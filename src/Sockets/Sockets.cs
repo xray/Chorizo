@@ -1,32 +1,15 @@
 using System;
-using System.Data.SqlTypes;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 
-namespace Chorizo.Sockets
+namespace ChorizoFW.Sockets
 {
     public class SocketMaster
     {
-        static WaitHandle[] waitHandles = new WaitHandle[] 
-        {
-            new AutoResetEvent(false)
-        };
-        
-        public static void Ident()
-        {
-            Console.WriteLine("This is Chorizo!");
-        }
-
-        public static bool No()
-        {
-            return false;
-        }
-
-        public static void AsyncBoi(IAsyncResult result)
+        public static void AsyncCall(IAsyncResult result)
         {
             Socket FromEarlier = (Socket) result.AsyncState;
-            Console.WriteLine("Yo, got that connection B!");
+            Console.WriteLine("Something attempted to connect!");
         }
 
         public static void ListenMachine(Socket toListen, bool keepAlive)
@@ -35,7 +18,7 @@ namespace Chorizo.Sockets
             {
                 if (toListen.Poll(1000, SelectMode.SelectRead))
                 {
-                    toListen.BeginAccept(new AsyncCallback(AsyncBoi), toListen);
+                    toListen.BeginAccept(new AsyncCallback(AsyncCall), toListen);
                 }
                 else
                 {
@@ -44,7 +27,7 @@ namespace Chorizo.Sockets
             }
         }
         
-        public static void NewSocket()
+        public static void NewSocket(int port)
         {
             // create the socket
             Socket listenSocket = new Socket(
@@ -54,7 +37,7 @@ namespace Chorizo.Sockets
             );
 
             // bind the listening socket to the port
-            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 5000);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
             listenSocket.Bind(endPoint);
 
             // start listening
