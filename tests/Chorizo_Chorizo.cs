@@ -8,6 +8,7 @@ namespace Chorizo.Tests
         [Fact]
         public void Listen_ShouldStartListeningOnDefaultPortUsingSocketMachine()
         {
+            // Arrange
             var mockRouter = new Mock<IRouter>();
             var mockSocketMachine = new Mock<ISocketMachine>();
             
@@ -17,8 +18,10 @@ namespace Chorizo.Tests
                 SocketMachine = mockSocketMachine.Object
             };
             
+            // Act
             localServer.Listen();
             
+            // Assert
             mockSocketMachine.Verify(sm => sm.Listen(8000));
         }
     }

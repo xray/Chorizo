@@ -8,6 +8,7 @@ namespace Chorizo.Tests
         [Fact]
         public void MatchShouldTakeInARequestAndPassItToItsHandler()
         {
+            // Arrange
             var mockMatcher = new Mock<IMatcher>();
 
             var testRequest = new Request();
@@ -16,15 +17,18 @@ namespace Chorizo.Tests
             {
                 Matcher = mockMatcher.Object
             };
-
+            
+            // Act
             testRouter.Match(testRequest);
             
+            // Assert
             mockMatcher.Verify(handler => handler.Match(testRequest));
         }
 
         [Fact]
         public void GetShouldTakeInAPathAndHandlerAndCreateANewRouteForAGetRequestAtTheSpecifiedPath()
         {
+            // Arrange
             var mockMatcher = new Mock<IMatcher>();
 
             var testRouter = new DefaultRouter
@@ -32,14 +36,14 @@ namespace Chorizo.Tests
                 Matcher = mockMatcher.Object
             };
 
-            var testRoute = new Route("GET", "/", (req, res) => { res.Send("Hello World"); });
-
             Route.Action action = (req, res) => { res.Send("Hello World!"); };
             
+            // Act
             testRouter.Get("/", action);
             
-            Assert.Equal(testRouter.Routes[0].HttpMethod, testRoute.HttpMethod);
-            Assert.Equal(testRouter.Routes[0].RoutePath, testRoute.RoutePath);
+            // Assert
+            Assert.Equal(testRouter.Routes[0].HttpMethod, "GET");
+            Assert.Equal(testRouter.Routes[0].RoutePath, "/");
             Assert.Same(testRouter.Routes[0].Go, action);
         }
     }

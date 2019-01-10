@@ -11,6 +11,11 @@ namespace Chorizo
         {
             Routes = new List<Route>();
         }
+        
+        // ASK KB:
+        // Should I just put the logic for the matching Requests to
+        // Routes in the Match function or should I leave it as is
+        // with the functionality abstracted away?
         public Response Match(Request testRequest)
         {
             var response = Matcher.Match(testRequest);
