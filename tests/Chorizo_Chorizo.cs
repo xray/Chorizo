@@ -12,7 +12,7 @@ namespace Chorizo.Tests
             var mockRouter = new Mock<IRouter>();
             var mockSocketMachine = new Mock<ISocketMachine>();
             
-            var localServer = new Chorizo()
+            var localServer = new Chorizo
             {
                 Router = mockRouter.Object,
                 SocketMachine = mockSocketMachine.Object

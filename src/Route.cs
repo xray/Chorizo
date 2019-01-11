@@ -5,10 +5,8 @@ namespace Chorizo
         public string HttpMethod { get; }
         public string RoutePath { get; }
 
-        public delegate void Action(Request req, Response res);
-
-        public readonly Action Go;
-        public Route(string method, string path, Action action)
+        public readonly DefaultRouter.Action Go;
+        public Route(string method, string path, DefaultRouter.Action action)
         {
             HttpMethod = method;
             RoutePath = path;

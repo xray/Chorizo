@@ -2,6 +2,6 @@ namespace Chorizo
 {
     public interface IRouter
     {
-        Response Match(Request request);
+        bool Match(string requestMethod, string uri);
     }
 }
