@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-using System.Data;
-using System.Threading;
+using System;
 using Xunit;
 using Moq;
 
@@ -8,14 +6,15 @@ namespace Chorizo.Tests
 {
     public class ChorizoServerTest
     {
-        private readonly Mock<IConnectionHandler> _mockConnectionHandler;
+        private readonly Mock<IRouter> _mockRouter;
         private readonly Mock<IServerStatus> _mockServerStatus;
         private readonly Mock<ISocketMachine> _mockSocketMachine;
 
         public ChorizoServerTest()
         {
             _mockSocketMachine = new Mock<ISocketMachine>();
-            _mockConnectionHandler = new Mock<IConnectionHandler>();
+            _mockSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(new Tuple<Request, Response>(new Request(), new Response()));
+            _mockRouter = new Mock<IRouter>();
             _mockServerStatus = new Mock<IServerStatus>();
             _mockServerStatus.SetupSequence(status => status.IsRunning())
                 .Returns(true)
@@ -29,7 +28,7 @@ namespace Chorizo.Tests
             var localServer = new Chorizo
             {
                 SocketMachine = _mockSocketMachine.Object,
-                ConnectionHandler = _mockConnectionHandler.Object,
+                Router = _mockRouter.Object,
                 Status = _mockServerStatus.Object,
             };
             
@@ -46,7 +45,7 @@ namespace Chorizo.Tests
             var localServer = new Chorizo
             {
                 SocketMachine = _mockSocketMachine.Object,
-                ConnectionHandler = _mockConnectionHandler.Object,
+                Router = _mockRouter.Object,
                 Status = _mockServerStatus.Object
             };
             
@@ -58,36 +57,39 @@ namespace Chorizo.Tests
         [Fact]
         public void HandlesConnection()
         {
-            var mockConnectionHandler = new Mock<IConnectionHandler>();
+            var mockRouter = new Mock<IRouter>();
             var testSpecificSocketMachine = new Mock<ISocketMachine>();
-            var testConnection = new Connection();
+            var testReqRes = new Tuple<Request, Response>(new Request(), new Response());
+            var (testReq, testRes) = testReqRes;
 
-            testSpecificSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(testConnection);
+            testSpecificSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(testReqRes);
             
-            var localServer = new Chorizo()
+            var localServer = new Chorizo
             {
                 SocketMachine = testSpecificSocketMachine.Object,
-                ConnectionHandler = mockConnectionHandler.Object,
+                Router = mockRouter.Object,
                 Status = _mockServerStatus.Object
             };
             
             localServer.Start();
             
-            mockConnectionHandler.Verify(ch => ch.Handle(testConnection));
+            mockRouter.Verify(ch => ch.Route(testReq, testRes));
         }
 
         [Fact]
         public void AcceptsMultipleConnections()
         {
             var mockSocketMachine = new Mock<ISocketMachine>();
-            var mockConnectionHandler = new Mock<IConnectionHandler>();
+            var mockRouter = new Mock<IRouter>();
             var mockServerStatus = new Mock<IServerStatus>();
-            var connection1 = new Connection();
-            var connection2 = new Connection();
+            var reqRes1 = new Tuple<Request, Response>(new Request(), new Response());
+            var reqRes2 = new Tuple<Request, Response>(new Request(), new Response());
+            var (mockReq1, mockRes1) = reqRes1;
+            var (mockReq2, mockRes2) = reqRes2;
 
             mockSocketMachine.SetupSequence(sm => sm.AcceptConnection())
-                .Returns(connection1)
-                .Returns(connection2);
+                .Returns(reqRes1)
+                .Returns(reqRes2);
 
             mockServerStatus.SetupSequence(status => status.IsRunning())
                 .Returns(true)
@@ -97,14 +99,14 @@ namespace Chorizo.Tests
             var localServer = new Chorizo()
             {
                 SocketMachine = _mockSocketMachine.Object,
-                ConnectionHandler = mockConnectionHandler.Object,
+                Router = mockRouter.Object,
                 Status = mockServerStatus.Object
             };
             
             localServer.Start();
             
-            mockConnectionHandler.Verify(ch => ch.Handle(It.IsAny<Connection>()));
-            mockConnectionHandler.Verify(ch => ch.Handle(It.IsAny<Connection>()));
+            mockRouter.Verify(router => router.Route(mockReq1, mockRes1));
+            mockRouter.Verify(router => router.Route(mockReq2, mockRes2));
         }
     }
 }

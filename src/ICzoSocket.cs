@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Sockets;
 
@@ -7,6 +8,7 @@ namespace Chorizo
     {
         void Bind(IPEndPoint endPoint);
         void Listen(int port);
-        Socket Accept();
+        CzoSocket Accept();
+        Tuple<byte[], int> Receive(byte[] buffer);
     }
 }

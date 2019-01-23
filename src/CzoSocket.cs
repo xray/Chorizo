@@ -1,6 +1,6 @@
 namespace Chorizo
 {
-    public class Connection
+    public class CzoSocket
     {
         
     }

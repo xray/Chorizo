@@ -1,4 +1,4 @@
-using System.Threading;
+using System;
 
 namespace Chorizo
 {
@@ -9,7 +9,7 @@ namespace Chorizo
     public class Chorizo
     {
         public ISocketMachine SocketMachine { get; set; }
-        public IConnectionHandler ConnectionHandler { get; set; }
+        public IRouter Router { get; set; }
         public IServerStatus Status { get; set; }
         public int Port { get; set; }
         public string HostName { get; set; }
@@ -25,8 +25,9 @@ namespace Chorizo
             SocketMachine.Listen(Port, HostName);
             while (Status.IsRunning())
             {
-                var connection = SocketMachine.AcceptConnection();
-                ConnectionHandler.Handle(connection);
+                var (req, res) = SocketMachine.AcceptConnection();
+                Router.Route(req, res);
+                
             }
         }
     }

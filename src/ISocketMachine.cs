@@ -1,10 +1,11 @@
-using System.Threading;
+using System;
 
 namespace Chorizo
 {
     public interface ISocketMachine
     {
         void Listen(int port, string hostName);
-        Connection AcceptConnection();
+        Tuple<Request, Response> AcceptConnection();
+        Tuple<string, byte[]> GetData();
     }
 }
