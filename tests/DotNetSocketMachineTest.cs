@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,6 +14,7 @@ namespace Chorizo.Tests
         private readonly string _testHostName;
         private readonly Mock<ICzoSocket> _mockCzoSocket;
         private readonly Mock<IRequestBuilder> _mockRequestBuilder;
+        private readonly string _testGetRequestString;
 
         public DotNetSocketMachineTest()
         {
@@ -20,6 +22,8 @@ namespace Chorizo.Tests
             _testHostName = "localhost";
             _mockCzoSocket = new Mock<ICzoSocket>();
             _mockRequestBuilder = new Mock<IRequestBuilder>();
+            _testGetRequestString =
+                "GET  HTTP/1.1\r\nHost: localhost:8000\r\ncache-control: no-cache,no-cache\r\nPostman-Token: 7580f83c-1d96-4996-a58e-0395fc4296c4\r\nUser-Agent: PostmanRuntime/7.4.0\r\nAccept: */*\r\nHost: localhost:8000\r\naccept-encoding: gzip, deflate\r\nConnection: keep-alive\r\n\r\n";
         }
         [Fact]
         public void ListenCreatesANewSocketAndStartsListeningOnIt()
@@ -33,7 +37,7 @@ namespace Chorizo.Tests
             testSocketMachine.Listen(_testPort, _testHostName);
             
             _mockCzoSocket.Verify(sock => sock.Bind(It.IsAny<IPEndPoint>()));
-            _mockCzoSocket.Verify(sock => sock.Listen(_testPort));
+            _mockCzoSocket.Verify(sock => sock.Listen(10));
         }
 
         [Fact]
@@ -41,12 +45,16 @@ namespace Chorizo.Tests
         {
             var testSpecificRequestBuilder = new Mock<IRequestBuilder>();
             testSpecificRequestBuilder.Setup(bob => bob.Build(It.IsAny<string>())).Returns(new Request());
+            var mockAcceptedSocket = new Mock<ICzoSocket>();
+            var testBytes = Encoding.UTF8.GetBytes(_testGetRequestString);
+            mockAcceptedSocket.Setup(sock => sock.Receive(It.IsAny<int>())).Returns(new Tuple<byte[], int>(testBytes, 251));
+            _mockCzoSocket.Setup(sock => sock.Accept()).Returns(mockAcceptedSocket.Object);
             var testSocketMachine = new DotNetSocketMachine
             {
                 SocketImplementation = _mockCzoSocket.Object,
                 RequestBuilder = testSpecificRequestBuilder.Object
             };
-
+            
             var result = testSocketMachine.AcceptConnection();
             
             _mockCzoSocket.Verify(sock => sock.Accept());
@@ -57,31 +65,30 @@ namespace Chorizo.Tests
         [Fact]
         public void GetDataGetsARequestWithNoBodyAndReturnsTheHeaderAsAStringAndAnEmptyByteArray()
         {
+            var mockAcceptedSocket = new Mock<ICzoSocket>();
             var testSocketMachine = new DotNetSocketMachine
             {
                 SocketImplementation = _mockCzoSocket.Object,
                 RequestBuilder = _mockRequestBuilder.Object
             };
 
-            const string testString =
-                "GET  HTTP/1.1\r\nHost: localhost:8000\r\ncache-control: no-cache,no-cache\r\nPostman-Token: 7580f83c-1d96-4996-a58e-0395fc4296c4\r\nUser-Agent: PostmanRuntime/7.4.0\r\nAccept: */*\r\nHost: localhost:8000\r\naccept-encoding: gzip, deflate\r\nConnection: keep-alive\r\n\r\n";
+            var testBytes = Encoding.UTF8.GetBytes(_testGetRequestString);
             
-            var testBytes = Encoding.UTF8.GetBytes(testString);
-            
-            _mockCzoSocket.Setup(sock => sock.Receive(It.IsAny<byte[]>())).Returns(new Tuple<byte[], int>(testBytes, 251));
+            mockAcceptedSocket.Setup(sock => sock.Receive(It.IsAny<int>())).Returns(new Tuple<byte[], int>(testBytes, 251));
 
-            var result = testSocketMachine.GetData();
+            var result = testSocketMachine.GetHeader(mockAcceptedSocket.Object);
             var (header, body) = result;
             
-            _mockCzoSocket.Verify(sock => sock.Receive(It.IsAny<byte[]>()));
+            mockAcceptedSocket.Verify(sock => sock.Receive(It.IsAny<int>()));
             Assert.IsType<Tuple<string, byte[]>>(result);
-            Assert.Equal(header, testString);
+            Assert.Equal(header, _testGetRequestString);
             Assert.Equal(new byte[0], body);
         }
 
         [Fact]
         public void GetDataGetsARequestWithABodyAndReturnsTheHeaderAsAStringAndByteArrayContainingAnyBytesOfTheBodyThatWereReceivedWhenReceivingTheHeader()
         {
+            var mockAcceptedSocket = new Mock<ICzoSocket>();
             var testSocketMachine = new DotNetSocketMachine
             {
                 SocketImplementation = _mockCzoSocket.Object,
@@ -99,11 +106,11 @@ namespace Chorizo.Tests
             Buffer.BlockCopy(testBytesFull, 0, ptOne, 0, 256);
             var ptTwo = new byte[256];
             Buffer.BlockCopy(testBytesFull, 256, ptTwo, 0, testBytesFull.Length - 256);
-            _mockCzoSocket.SetupSequence(sock => sock.Receive(It.IsAny<byte[]>()))
+            mockAcceptedSocket.SetupSequence(sock => sock.Receive(It.IsAny<int>()))
                 .Returns(new Tuple<byte[], int>(ptOne, 256))
                 .Returns(new Tuple<byte[], int>(ptTwo, testBytesFull.Length - 256));
             
-            var result = testSocketMachine.GetData();
+            var result = testSocketMachine.GetHeader(mockAcceptedSocket.Object);
             var (header, body) = result;
             var bodyText = Encoding.UTF8.GetString(body);
             

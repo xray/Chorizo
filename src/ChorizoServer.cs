@@ -27,7 +27,6 @@ namespace Chorizo
             {
                 var (req, res) = SocketMachine.AcceptConnection();
                 Router.Route(req, res);
-                
             }
         }
     }

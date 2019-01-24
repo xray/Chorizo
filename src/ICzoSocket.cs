@@ -7,8 +7,8 @@ namespace Chorizo
     public interface ICzoSocket
     {
         void Bind(IPEndPoint endPoint);
-        void Listen(int port);
-        CzoSocket Accept();
-        Tuple<byte[], int> Receive(byte[] buffer);
+        void Listen(int backlogSize);
+        ICzoSocket Accept();
+        Tuple<byte[], int> Receive(int byteBufferSize);
     }
 }

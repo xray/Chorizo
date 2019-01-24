@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading;
 using Xunit;
 using Moq;
 
@@ -22,7 +25,7 @@ namespace Chorizo.Tests
         }
 
         [Fact]
-        public void Start_ShouldStartListeningOnDefaultPortandHostNameUsingSocketMachine()
+        public void Start_ShouldStartListeningOnDefaultPortAndHostNameUsingSocketMachine()
         {
             // Arrange
             var localServer = new Chorizo
@@ -36,7 +39,7 @@ namespace Chorizo.Tests
             localServer.Start();
             
             // Assert
-            _mockSocketMachine.Verify(sm => sm.Listen(8000, "localhost"));
+            _mockSocketMachine.Verify(sm => sm.Listen(8000, "localhost", 10));
         }
 
         [Fact]
