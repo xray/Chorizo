@@ -1,5 +1,3 @@
-using System;
-
 namespace Chorizo
 {
     public interface IServerStatus
@@ -8,14 +6,19 @@ namespace Chorizo
     }
     public class Chorizo
     {
-        public ISocketMachine SocketMachine { get; set; }
-        public IRouter Router { get; set; }
         public IServerStatus Status { get; set; }
-        private IConfigRetriever ConfigRetriever { get; set; }
+        public ISocketMachine SocketMachine { get; set; }
+
         private readonly ServerConfig _config;
+        
         public Chorizo()
         {
-            _config = ConfigRetriever.GetConfig();
+            _config = new ServerConfig("HTTP", "localhost", 8000);
+        }
+
+        public Chorizo(string protocol, int port)
+        {
+            _config = new ServerConfig(protocol, "localhost", port);
         }
 
         public void Start()
