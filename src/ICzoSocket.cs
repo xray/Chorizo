@@ -4,11 +4,7 @@ using System.Net.Sockets;
 
 namespace Chorizo
 {
-    public interface ICzoSocket
-    {
-        void Bind(IPEndPoint endPoint);
-        void Listen(int backlogSize);
-        ICzoSocket Accept();
+    public interface ICzoSocket {
         Tuple<byte[], int> Receive(int byteBufferSize);
     }
 }

@@ -1,13 +1,12 @@
 using System;
 using System.Net;
-using System.Net.Sockets;
 using System.Text;
 
 namespace Chorizo
 {
     public class DotNetSocketMachine:ISocketMachine
     {
-        public ICzoSocket SocketImplementation;
+        public IDotNetSocket SocketImplementation;
         public IRequestBuilder RequestBuilder;
 
         public void Listen(int port, string hostName, int backlog = 0)
@@ -16,18 +15,18 @@ namespace Chorizo
             var ipAddress = Dns.GetHostEntry(hostName).AddressList[0];
             var localEndPoint = new IPEndPoint(ipAddress, port);
 
-            SocketImplementation = SocketImplementation ?? new CzoSocket(ipAddress.AddressFamily);
+            SocketImplementation = SocketImplementation ?? new DotNetSocket();
             
             SocketImplementation.Bind(localEndPoint);
             SocketImplementation.Listen(backlog);
         }
 
-        public Tuple<Request, Response> AcceptConnection()
+        public ICzoSocket AcceptConnection()
         {
             var workingSocket = SocketImplementation.Accept();
             var (requestHeader, extraBytes) = GetHeader(workingSocket);
             var constructedRequest = RequestBuilder.Build(requestHeader);
-            return new Tuple<Request, Response>(constructedRequest, new Response());
+            return new CzoSocket();
         }
 
         public Tuple<string, byte[]> GetHeader(ICzoSocket acceptedSocket)

@@ -11,22 +11,19 @@ namespace Chorizo
         public ISocketMachine SocketMachine { get; set; }
         public IRouter Router { get; set; }
         public IServerStatus Status { get; set; }
-        public int Port { get; set; }
-        public string HostName { get; set; }
-
+        private IConfigRetriever ConfigRetriever { get; set; }
+        private readonly ServerConfig _config;
         public Chorizo()
         {
-            Port = 8000;
-            HostName = "localhost";
+            _config = ConfigRetriever.GetConfig();
         }
 
         public void Start()
         {
-            SocketMachine.Listen(Port, HostName);
+            SocketMachine.Listen(_config.Port, _config.HostName);
             while (Status.IsRunning())
             {
-                var (req, res) = SocketMachine.AcceptConnection();
-                Router.Route(req, res);
+                var chorizoSocket = SocketMachine.AcceptConnection();
             }
         }
     }
