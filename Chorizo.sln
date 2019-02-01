@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chorizo", "src\Chorizo.cspr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chorizo.Tests", "tests\Chorizo.Tests.csproj", "{A0917B50-B833-4B15-A52F-827FB613ACD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chipoltle", "Chipoltle\Chipoltle.csproj", "{3024C877-A054-4FCC-AC0E-8CE3AEBA2E0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chipotle", "Chipotle\Chipotle.csproj", "{3024C877-A054-4FCC-AC0E-8CE3AEBA2E0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
