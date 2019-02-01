@@ -1,3 +1,5 @@
+using Chorizo.Sockets.CzoSocket;
+
 namespace Chorizo.ProtocolHandler
 {
     public interface ICzoProtocolHandler

@@ -20,9 +20,8 @@ namespace Chipotle
             {
                 Status = new ServerRunner()
             };
+            Console.WriteLine($"Starting to listen on port {port}");
             server.Start();
-            Console.WriteLine($"Started listening on port {port}");
-
         }
     }
 }

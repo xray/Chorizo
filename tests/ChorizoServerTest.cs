@@ -1,4 +1,5 @@
 using Chorizo.ProtocolHandler;
+using Chorizo.Sockets.CzoSocket;
 using Xunit;
 using Moq;
 

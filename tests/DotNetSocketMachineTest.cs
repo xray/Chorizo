@@ -1,3 +1,5 @@
+using Chorizo.SocketMachine;
+using Chorizo.Sockets.DotNetSocket;
 using Moq;
 using Xunit;
 

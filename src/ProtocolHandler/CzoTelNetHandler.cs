@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using System.Text;
+using Chorizo.Sockets.CzoSocket;
 
 namespace Chorizo.ProtocolHandler
 {

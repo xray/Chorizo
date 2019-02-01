@@ -1,6 +1,7 @@
 using System;
 using System.Net.Sockets;
 using Chorizo.ProtocolHandler;
+using Chorizo.Sockets.CzoSocket;
 using Moq;
 using Xunit;
 

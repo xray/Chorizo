@@ -1,7 +1,8 @@
 using System.Net;
 using System.Net.Sockets;
+using Chorizo.Sockets.CzoSocket;
 
-namespace Chorizo
+namespace Chorizo.Sockets.DotNetSocket
 {
     public class DotNetSocket : IDotNetSocket
     {
@@ -50,7 +51,7 @@ namespace Chorizo
             {
                 throw new System.NotImplementedException();
             }
-            return new CzoSocket(_wrappedSocket.Accept());
+            return new CzoSocket.CzoSocket(_wrappedSocket.Accept());
         }
     }
 }

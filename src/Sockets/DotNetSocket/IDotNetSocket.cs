@@ -1,4 +1,6 @@
-namespace Chorizo
+using Chorizo.Sockets.CzoSocket;
+
+namespace Chorizo.Sockets.DotNetSocket
 {
     public interface IDotNetSocket
     {

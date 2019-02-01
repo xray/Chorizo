@@ -13,16 +13,8 @@ namespace Chorizo
 
         private ServerConfig Config { get; }
 
-        public Chorizo()
+        public Chorizo(int port = 8000, string protocol = "HTTP")
         {
-            ProtocolHandler = new CzoTelNetHandler();
-            SocketMachine = SocketMachine ?? new DotNetSocketMachine();
-            Config = new ServerConfig("HTTP", "localhost", 8000);
-        }
-
-        public Chorizo(int port, string protocol = null)
-        {
-            protocol = protocol ?? "HTTP";
             ProtocolHandler = new CzoTelNetHandler();
             SocketMachine = SocketMachine ?? new DotNetSocketMachine();
             Config = new ServerConfig(protocol, "localhost", port);

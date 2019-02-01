@@ -1,4 +1,4 @@
-namespace Chorizo
+namespace Chorizo.ServerConfiguration
 {
     public class ServerConfig
     {

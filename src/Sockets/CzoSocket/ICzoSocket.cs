@@ -1,7 +1,7 @@
 using System;
 using System.Net.Sockets;
 
-namespace Chorizo
+namespace Chorizo.Sockets.CzoSocket
 {
     public interface ICzoSocket {
         Tuple<byte[], int> Receive(int byteBufferSize);

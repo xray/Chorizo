@@ -1,4 +1,7 @@
-namespace Chorizo
+using Chorizo.Sockets.CzoSocket;
+using Chorizo.Sockets.DotNetSocket;
+
+namespace Chorizo.SocketMachine
 {
     public class DotNetSocketMachine : ISocketMachine
     {

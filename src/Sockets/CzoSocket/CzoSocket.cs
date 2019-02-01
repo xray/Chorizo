@@ -1,8 +1,7 @@
 using System;
-using System.Net;
 using System.Net.Sockets;
 
-namespace Chorizo
+namespace Chorizo.Sockets.CzoSocket
 {
     public class CzoSocket : ICzoSocket
     {
