@@ -1,6 +1,7 @@
-﻿using Chorizo;
+﻿using System;
+using Chorizo;
 
-namespace Chipoltle
+namespace Chipotle
 {
     public class ServerRunner : IServerStatus
     {
@@ -14,11 +15,14 @@ namespace Chipoltle
     {
         static void Main()
         {
-            var server = new Chorizo.Chorizo(8000, "TelNet")
+            var port = 8000;
+            var server = new Chorizo.Chorizo(port, "TelNet")
             {
                 Status = new ServerRunner()
             };
             server.Start();
+            Console.WriteLine($"Started listening on port {port}");
+
         }
     }
 }

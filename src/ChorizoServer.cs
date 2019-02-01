@@ -1,5 +1,7 @@
 using System;
 using Chorizo.ProtocolHandler;
+using Chorizo.ServerConfiguration;
+using Chorizo.SocketMachine;
 
 namespace Chorizo
 {
@@ -30,7 +32,6 @@ namespace Chorizo
         {
             SocketMachine.Setup(Config.Port, Config.HostName);
             SocketMachine.Listen(Config.Backlog);
-            Console.WriteLine($"Started listening on port {Config.Port}");
             while (Status.IsRunning())
             {
                 var chorizoSocket = SocketMachine.AcceptConnection();

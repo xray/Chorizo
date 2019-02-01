@@ -9,5 +9,40 @@
     <ItemGroup>
         <ProjectReference Include="..\src\Chorizo.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <_UnmanagedRegistrationCache Remove="obj\Chipotle.csproj.UnmanagedRegistration.cache" />
+      <_UnmanagedRegistrationCache Remove="obj\Chipotle.csproj.UnmanagedRegistration.cache" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\Chipotle.csproj.ResolveComReference.cache" />
+      <_ResolveComReferenceCache Remove="obj\Debug\netcoreapp2.2\Chipotle.csproj.ResolveComReference.cache" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\Chipotle.dll" />
+      <IntermediateAssembly Remove="obj\Debug\netcoreapp2.2\Chipotle.dll" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\Chipotle.pdb" />
+      <_DebugSymbolsIntermediatePath Remove="obj\Debug\netcoreapp2.2\Chipotle.pdb" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\Chipotle.dll" />
+      <_DeploymentManifestEntryPoint Remove="obj\Debug\netcoreapp2.2\Chipotle.dll" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\Chipotle.dll.manifest" />
+      <ApplicationManifest Remove="obj\Debug\netcoreapp2.2\Chipotle.dll.manifest" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <DeployManifest Remove="obj\Debug\netcoreapp2.2\Chipotle.application" />
+      <DeployManifest Remove="obj\Debug\netcoreapp2.2\Chipotle.application" />
+    </ItemGroup>
 
 </Project>
