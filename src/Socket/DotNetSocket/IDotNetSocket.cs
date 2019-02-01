@@ -1,11 +1,9 @@
-using System.Net;
-
 namespace Chorizo
 {
     public interface IDotNetSocket
     {
-        void Bind(IPEndPoint localEndPoint);
-        void Listen(int backlog);
+        void Bind(int port, string hostName);
+        void Listen(int backlogSize = 100);
         ICzoSocket Accept();
     }
 }

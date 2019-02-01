@@ -1,32 +1,47 @@
+using System;
+using Chorizo.ProtocolHandler;
+
 namespace Chorizo
 {
-    public interface IServerStatus
-    {
-        bool IsRunning();
-    }
     public class Chorizo
     {
         public IServerStatus Status { get; set; }
-        public ISocketMachine SocketMachine { get; set; }
+        public ISocketMachine SocketMachine;
+        public ICzoProtocolHandler ProtocolHandler;
 
-        private readonly ServerConfig _config;
-        
+        private ServerConfig Config { get; }
+
         public Chorizo()
         {
-            _config = new ServerConfig("HTTP", "localhost", 8000);
+            ProtocolHandler = new CzoTelNetHandler();
+            SocketMachine = SocketMachine ?? new DotNetSocketMachine();
+            Config = new ServerConfig("HTTP", "localhost", 8000);
         }
 
-        public Chorizo(string protocol, int port)
+        public Chorizo(int port, string protocol = null)
         {
-            _config = new ServerConfig(protocol, "localhost", port);
+            protocol = protocol ?? "HTTP";
+            ProtocolHandler = new CzoTelNetHandler();
+            SocketMachine = SocketMachine ?? new DotNetSocketMachine();
+            Config = new ServerConfig(protocol, "localhost", port);
         }
 
         public void Start()
         {
-            SocketMachine.Listen(_config.Port, _config.HostName);
+            SocketMachine.Setup(Config.Port, Config.HostName);
+            SocketMachine.Listen(Config.Backlog);
+            Console.WriteLine($"Started listening on port {Config.Port}");
             while (Status.IsRunning())
             {
                 var chorizoSocket = SocketMachine.AcceptConnection();
+                if (ProtocolHandler.WillHandle(Config.Protocol))
+                {
+                    ProtocolHandler.Handle(chorizoSocket);
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
     }

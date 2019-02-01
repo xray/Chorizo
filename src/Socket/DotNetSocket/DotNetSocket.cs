@@ -1,22 +1,56 @@
 using System.Net;
+using System.Net.Sockets;
 
 namespace Chorizo
 {
     public class DotNetSocket : IDotNetSocket
     {
-        public void Bind(IPEndPoint localEndPoint)
+        private Socket _wrappedSocket;
+        private bool _unbound;
+        private bool _notListening;
+
+        public DotNetSocket()
         {
-            throw new System.NotImplementedException();
+            _unbound = true;
+            _notListening = true;
         }
 
-        public void Listen(int backlog)
+        public void Bind(int port, string hostName)
         {
-            throw new System.NotImplementedException();
+            if (_unbound != true)
+            {
+                throw new System.NotImplementedException();
+            }
+            
+            var ipAddress = Dns.GetHostEntry(hostName).AddressList[0];
+            var localEndPoint = new IPEndPoint(ipAddress, port);
+            _wrappedSocket = new Socket(
+                ipAddress.AddressFamily,
+                SocketType.Stream,
+                ProtocolType.Tcp
+            );
+            _wrappedSocket.Bind(localEndPoint);
+            _unbound = false;
+        }
+
+        public void Listen(int backlogSize)
+        {
+            if (_unbound)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            _wrappedSocket.Listen(backlogSize);
+            _notListening = false;
         }
 
         public ICzoSocket Accept()
         {
-            throw new System.NotImplementedException();
+            if (_notListening)
+            {
+                throw new System.NotImplementedException();
+            }
+            return new CzoSocket(_wrappedSocket.Accept());
         }
     }
 }

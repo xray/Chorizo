@@ -4,7 +4,8 @@ namespace Chorizo
 {
     public interface ISocketMachine
     {
-        void Listen(int port, string hostName, int backlog = 10);
+        void Setup(int port, string hostName);
+        void Listen(int backlog);
         ICzoSocket AcceptConnection();
     }
 }

@@ -6,42 +6,32 @@ namespace Chorizo
 {
     public class CzoSocket : ICzoSocket
     {
-        private Socket WrappedSocket { get; set; }
-        public CzoSocket(AddressFamily addressFamily = AddressFamily.Unspecified)
+        private readonly Socket _wrappedSocket;
+        public CzoSocket(Socket toWrap)
         {
-            if (addressFamily != AddressFamily.Unspecified)
-            {
-                WrappedSocket = new Socket(
-                    addressFamily,
-                    SocketType.Stream,
-                    ProtocolType.Tcp
-                );
-            }
-        }
-        public void Bind(IPEndPoint endPoint)
-        {
-            WrappedSocket.Bind(endPoint);
-        }
-
-        public void Listen(int backlogSize)
-        {
-            WrappedSocket.Listen(backlogSize);
-        }
-
-        public ICzoSocket Accept()
-        {
-            var returnSocket = WrappedSocket.Accept();
-            return new CzoSocket
-            {
-                WrappedSocket = returnSocket
-            };
+            _wrappedSocket = toWrap;
         }
 
         public Tuple<byte[], int> Receive(int byteBufferSize)
         {
             var receiveBuffer = new byte[byteBufferSize];
-            var bytesReceived = WrappedSocket.Receive(receiveBuffer);
+            var bytesReceived = _wrappedSocket.Receive(receiveBuffer);
             return new Tuple<byte[], int>(receiveBuffer, bytesReceived);
+        }
+
+        public int Send(byte[] buffer)
+        {
+            return _wrappedSocket.Send(buffer);
+        }
+
+        public void Shutdown(SocketShutdown how)
+        {
+            _wrappedSocket.Shutdown(how);
+        }
+
+        public void Close()
+        {
+            _wrappedSocket.Close();
         }
     }
 }

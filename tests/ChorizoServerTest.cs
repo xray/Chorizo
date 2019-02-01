@@ -1,123 +1,110 @@
-//using System;
-//using System.Collections.Generic;
-//using System.Data;
-//using System.Threading;
-//using Xunit;
-//using Moq;
-//
-//namespace Chorizo.Tests
-//{
-//    public class ChorizoServerTest
-//    {
-//        private readonly Mock<IRouter> _mockRouter;
-//        private readonly Mock<IServerStatus> _mockServerStatus;
-//        private readonly Mock<ISocketMachine> _mockSocketMachine;
-//        private readonly Request _testRequest;
-//
-//        public ChorizoServerTest()
-//        {
-//            _mockSocketMachine = new Mock<ISocketMachine>();
-//            var testParams = new Dictionary<string, string>
-//            {
-//                {"cache-control", "no-cache"},
-//                {"Postman-Token", "3f77f85c-b78e-46ef-94cc-a82b1cbacc86"},
-//                {"User-Agent", "PostmanRuntime/7.4.0"},
-//                {"Accept", "*/*"},
-//                {"Host", "localhost:8000"},
-//                {"accept-encoding", "gzip, deflate"},
-//                {"Connection", "keep-alive"}
-//            };
-//            _testRequest = new Request("GET", "", "HTTP/1.1", testParams);
-//            _mockSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(new CzoSocket());
-//            _mockServerStatus = new Mock<IServerStatus>();
-//            _mockServerStatus.SetupSequence(status => status.IsRunning())
-//                .Returns(true)
-//                .Returns(false);
-//        }
-//
-//        [Fact]
-//        public void Start_ShouldStartListeningOnDefaultPortAndHostNameUsingSocketMachine()
-//        {
-//            // Arrange
-//            var localServer = new Chorizo
-//            {
-//                SocketMachine = _mockSocketMachine.Object,
-//                Router = _mockRouter.Object,
-//                Status = _mockServerStatus.Object,
-//            };
-//            
-//            // Act
-//            localServer.Start();
-//            
-//            // Assert
-//            _mockSocketMachine.Verify(sm => sm.Listen(8000, "localhost", 10));
-//        }
-//
-//        [Fact]
-//        public void GetsAConnectionFromTheSocketMachine()
-//        {
-//            var localServer = new Chorizo
-//            {
-//                SocketMachine = _mockSocketMachine.Object,
-//                Router = _mockRouter.Object,
-//                Status = _mockServerStatus.Object
-//            };
-//            
-//            localServer.Start();
-//            
-//            _mockSocketMachine.Verify(sm => sm.AcceptConnection());
-//        }
-//
-//        [Fact]
-//        public void HandlesConnection()
-//        {
-//            var mockRouter = new Mock<IRouter>();
-//            var testSpecificSocketMachine = new Mock<ISocketMachine>();
-//            var testReqRes = new CzoSocket();
-//
-//            testSpecificSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(testReqRes);
-//            
-//            var localServer = new Chorizo
-//            {
-//                SocketMachine = testSpecificSocketMachine.Object,
-//                Router = mockRouter.Object,
-//                Status = _mockServerStatus.Object
-//            };
-//            
-//            localServer.Start();
-//            
-//            mockRouter.Verify(ch => ch.Route(testReq, testRes));
-//        }
-//
-//        [Fact]
-//        public void AcceptsMultipleConnections()
-//        {
-//            var mockSocketMachine = new Mock<ISocketMachine>();
-//            var mockRouter = new Mock<IRouter>();
-//            var mockServerStatus = new Mock<IServerStatus>();
-//            var reqRes1 = new CzoSocket();
-//            var reqRes2 = new CzoSocket();
-//
-//            mockSocketMachine.SetupSequence(sm => sm.AcceptConnection())
-//                .Returns(reqRes1)
-//                .Returns(reqRes2);
-//
-//            mockServerStatus.SetupSequence(status => status.IsRunning())
-//                .Returns(true)
-//                .Returns(true)
-//                .Returns(false);
-//
-//            var localServer = new Chorizo()
-//            {
-//                SocketMachine = _mockSocketMachine.Object,
-//                Router = mockRouter.Object,
-//                Status = mockServerStatus.Object
-//            };
-//            
-//            localServer.Start();
-//            
-//            mockRouter.Verify(router => router.Route(mockReq1, mockRes1));
-//            mockRouter.Verify(router => router.Route(mockReq2, mockRes2));
-//        }
-//    }
-//}
+using Chorizo.ProtocolHandler;
+using Xunit;
+using Moq;
+
+namespace Chorizo.Tests
+{
+    public class ChorizoServerTest
+    {
+        private readonly Mock<ICzoSocket> _mockCzoSocket;
+        private readonly Mock<IServerStatus> _mockServerStatus;
+        private readonly Mock<ISocketMachine> _mockSocketMachine;
+        private readonly Mock<ICzoProtocolHandler> _mockHTTPHandler;
+        private readonly Mock<ICzoProtocolHandler> _mockTelNetHandler;
+        
+        public ChorizoServerTest()
+        {
+            _mockCzoSocket = new Mock<ICzoSocket>();
+            _mockSocketMachine = new Mock<ISocketMachine>();
+            _mockSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(_mockCzoSocket.Object);
+            _mockServerStatus = new Mock<IServerStatus>();
+            _mockServerStatus.SetupSequence(status => status.IsRunning())
+                .Returns(true)
+                .Returns(false);
+            _mockHTTPHandler = new Mock<ICzoProtocolHandler>();
+            _mockHTTPHandler.Setup(http => http.WillHandle("HTTP")).Returns(true);
+        }
+
+        [Fact]
+        public void Start_ShouldStartListeningOnDefaultPortAndHostNameUsingSocketMachine()
+        {
+            // Arrange
+            var localServer = new Chorizo
+            {
+                ProtocolHandler = _mockHTTPHandler.Object,
+                Status = _mockServerStatus.Object,
+                SocketMachine = _mockSocketMachine.Object
+            };
+            
+            // Act
+            localServer.Start();
+            
+            // Assert
+            _mockSocketMachine.Verify(sm => sm.Setup(8000, "localhost"));
+            _mockSocketMachine.Verify(sm => sm.Listen(100));
+        }
+
+        [Fact]
+        public void GetsAConnectionFromTheSocketMachine()
+        {
+            var localServer = new Chorizo
+            {
+                ProtocolHandler = _mockHTTPHandler.Object,
+                SocketMachine = _mockSocketMachine.Object,
+                Status = _mockServerStatus.Object
+            };
+            
+            localServer.Start();
+            
+            _mockSocketMachine.Verify(sm => sm.AcceptConnection());
+        }
+
+        [Fact]
+        public void HandlesConnection()
+        {
+            var localServer = new Chorizo
+            {
+                Status = _mockServerStatus.Object,
+                SocketMachine = _mockSocketMachine.Object,
+                ProtocolHandler = _mockHTTPHandler.Object
+            };
+            
+            localServer.Start();
+            
+            _mockHTTPHandler.Verify(http => http.WillHandle("HTTP"));
+            _mockHTTPHandler.Verify(http => http.Handle(_mockCzoSocket.Object));
+        }
+
+        [Fact]
+        public void AcceptsMultipleConnections()
+        {
+            var mockSocketMachine = new Mock<ISocketMachine>();
+            var mockServerStatus = new Mock<IServerStatus>();
+            var testSockOne = new Mock<ICzoSocket>();
+            var testSockTwo = new Mock<ICzoSocket>();
+
+            mockSocketMachine.SetupSequence(sm => sm.AcceptConnection())
+                .Returns(testSockOne.Object)
+                .Returns(testSockTwo.Object);
+
+            mockServerStatus.SetupSequence(status => status.IsRunning())
+                .Returns(true)
+                .Returns(true)
+                .Returns(false);
+
+            var localServer = new Chorizo()
+            {
+                Status = mockServerStatus.Object,
+                SocketMachine = mockSocketMachine.Object,
+                ProtocolHandler = _mockHTTPHandler.Object
+            };
+            
+            localServer.Start();
+            
+            _mockHTTPHandler.Verify(http => http.WillHandle("HTTP"));
+            _mockHTTPHandler.Verify(http => http.Handle(testSockOne.Object));
+            _mockHTTPHandler.Verify(http => http.WillHandle("HTTP"));
+            _mockHTTPHandler.Verify(http => http.Handle(testSockTwo.Object));
+        }
+    }
+}
