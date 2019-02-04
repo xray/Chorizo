@@ -9,13 +9,13 @@ namespace Chorizo
     {
         public IServerStatus Status { get; set; }
         public ISocketMachine SocketMachine;
-        public IChorizoProtocolHandler ProtocolHandler;
+        public IChorizoProtocolConnectionHandler ProtocolConnectionHandler;
 
         private ServerConfig Config { get; }
 
         public Chorizo(int port = 8000, string protocol = "HTTP")
         {
-            ProtocolHandler = new ChorizoEchoHandler();
+            ProtocolConnectionHandler = new ChorizoEchoConnectionHandler();
             SocketMachine = SocketMachine ?? new DotNetSocketMachine();
             Config = new ServerConfig(protocol, "localhost", port);
         }
@@ -23,13 +23,13 @@ namespace Chorizo
         public void Start()
         {
             SocketMachine.Setup(Config.Port, Config.HostName);
-            SocketMachine.Listen(Config.Backlog);
+            SocketMachine.Listen(Config.NumberOfConnectionsInQueue);
             while (Status.IsRunning())
             {
                 var chorizoSocket = SocketMachine.AcceptConnection();
-                if (ProtocolHandler.WillHandle(Config.Protocol))
+                if (ProtocolConnectionHandler.WillHandle(Config.Protocol))
                 {
-                    ProtocolHandler.Handle(chorizoSocket);
+                    ProtocolConnectionHandler.HandleRequest(chorizoSocket);
                 }
                 else
                 {

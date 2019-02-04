@@ -23,13 +23,9 @@ namespace Chorizo.Sockets.CzoSocket
             return _wrappedSocket.Send(buffer);
         }
 
-        public void Shutdown(SocketShutdown how)
+        public void Disconnect(SocketShutdown how)
         {
             _wrappedSocket.Shutdown(how);
-        }
-
-        public void Close()
-        {
             _wrappedSocket.Close();
         }
     }

@@ -6,7 +6,6 @@ namespace Chorizo.Sockets.CzoSocket
     public interface IChorizoSocket {
         Tuple<byte[], int> Receive(int byteBufferSize);
         int Send(byte[] buffer);
-        void Shutdown(SocketShutdown how);
-        void Close();
+        void Disconnect(SocketShutdown how);
     }
 }

@@ -5,20 +5,16 @@ using Chorizo.Sockets.CzoSocket;
 
 namespace Chorizo.ProtocolHandler
 {
-    public class ChorizoEchoHandler : IChorizoProtocolHandler
+    public class ChorizoEchoConnectionHandler : IChorizoProtocolConnectionHandler
     {
-        private readonly string _protocol;
-
-        public ChorizoEchoHandler()
-        {
-            _protocol = "TelNet";
-        }
+        private const string Protocol = "TelNet";
+        
         public bool WillHandle(string protocol)
         {
-            return protocol == _protocol;
+            return protocol == Protocol;
         }
 
-        public void Handle(IChorizoSocket chorizoSocket)
+        public void HandleRequest(IChorizoSocket chorizoSocket)
         {
             var retrievedData = retrieveData(chorizoSocket);
             echoData(chorizoSocket, retrievedData);
@@ -46,8 +42,7 @@ namespace Chorizo.ProtocolHandler
             byte[] msg = Encoding.ASCII.GetBytes(toEcho);
             chorizoSocket.Send(msg);
             Console.WriteLine("Sent Back the data, closing the connection...");
-            chorizoSocket.Shutdown(SocketShutdown.Both);
-            chorizoSocket.Close();
+            chorizoSocket.Disconnect(SocketShutdown.Both);
         }
     }
 }

@@ -7,12 +7,12 @@ using Xunit;
 
 namespace Chorizo.Tests
 {
-    public class ChorizoEchoHandlerTest
+    public class ChorizoEchoConnectionHandlerTest
     {
         [Fact]
         public void WillHandleReturnsTrueIfItCanHandleTheProtocol()
         {
-            var testHandler = new ChorizoEchoHandler();
+            var testHandler = new ChorizoEchoConnectionHandler();
 
             Assert.True(testHandler.WillHandle("TelNet"));
         }
@@ -20,7 +20,7 @@ namespace Chorizo.Tests
         [Fact]
         public void WillHandleReturnsFalseIfItCannotHandleTheProtocol()
         {
-            var testHandler = new ChorizoEchoHandler();
+            var testHandler = new ChorizoEchoConnectionHandler();
 
             Assert.False(testHandler.WillHandle("HTTP"));
         }
@@ -29,7 +29,7 @@ namespace Chorizo.Tests
         public void HandleEchosTheDataSentFromTheClientBackToItself()
         {
             
-            var testHandler = new ChorizoEchoHandler();
+            var testHandler = new ChorizoEchoConnectionHandler();
             var testNums = new byte[] {70, 79, 79, 10};
             var mockCzoSocket = new Mock<IChorizoSocket>();
             mockCzoSocket.SetupSequence(sock => sock.Receive(It.IsAny<int>()))
@@ -38,12 +38,11 @@ namespace Chorizo.Tests
                 .Returns(new Tuple<byte[], int>(new byte[] {79}, 1))
                 .Returns(new Tuple<byte[], int>(new byte[] {10}, 1));
             
-            testHandler.Handle(mockCzoSocket.Object);
+            testHandler.HandleRequest(mockCzoSocket.Object);
             
             mockCzoSocket.Verify(sock => sock.Receive(It.IsAny<int>()), Times.Exactly(4));
             mockCzoSocket.Verify(sock => sock.Send(testNums));
-            mockCzoSocket.Verify(sock => sock.Shutdown(SocketShutdown.Both));
-            mockCzoSocket.Verify(sock => sock.Close());
+            mockCzoSocket.Verify(sock => sock.Disconnect(SocketShutdown.Both));
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Chorizo.Tests
         private readonly Mock<IChorizoSocket> _mockCzoSocket;
         private readonly Mock<IServerStatus> _mockServerStatus;
         private readonly Mock<ISocketMachine> _mockSocketMachine;
-        private readonly Mock<IChorizoProtocolHandler> _mockHTTPHandler;
+        private readonly Mock<IChorizoProtocolConnectionHandler> _mockHttpHandler;
         
         public ChorizoServerTest()
         {
@@ -21,8 +21,8 @@ namespace Chorizo.Tests
             _mockServerStatus.SetupSequence(status => status.IsRunning())
                 .Returns(true)
                 .Returns(false);
-            _mockHTTPHandler = new Mock<IChorizoProtocolHandler>();
-            _mockHTTPHandler.Setup(http => http.WillHandle("HTTP")).Returns(true);
+            _mockHttpHandler = new Mock<IChorizoProtocolConnectionHandler>();
+            _mockHttpHandler.Setup(http => http.WillHandle("HTTP")).Returns(true);
         }
 
         [Fact]
@@ -30,7 +30,7 @@ namespace Chorizo.Tests
         {
             var localServer = new Chorizo
             {
-                ProtocolHandler = _mockHTTPHandler.Object,
+                ProtocolConnectionHandler = _mockHttpHandler.Object,
                 Status = _mockServerStatus.Object,
                 SocketMachine = _mockSocketMachine.Object
             };
@@ -46,7 +46,7 @@ namespace Chorizo.Tests
         {
             var localServer = new Chorizo
             {
-                ProtocolHandler = _mockHTTPHandler.Object,
+                ProtocolConnectionHandler = _mockHttpHandler.Object,
                 SocketMachine = _mockSocketMachine.Object,
                 Status = _mockServerStatus.Object
             };
@@ -63,13 +63,13 @@ namespace Chorizo.Tests
             {
                 Status = _mockServerStatus.Object,
                 SocketMachine = _mockSocketMachine.Object,
-                ProtocolHandler = _mockHTTPHandler.Object
+                ProtocolConnectionHandler = _mockHttpHandler.Object
             };
             
             localServer.Start();
             
-            _mockHTTPHandler.Verify(http => http.WillHandle("HTTP"));
-            _mockHTTPHandler.Verify(http => http.Handle(_mockCzoSocket.Object));
+            _mockHttpHandler.Verify(http => http.WillHandle("HTTP"));
+            _mockHttpHandler.Verify(http => http.HandleRequest(_mockCzoSocket.Object));
         }
 
         [Fact]
@@ -93,15 +93,15 @@ namespace Chorizo.Tests
             {
                 Status = mockServerStatus.Object,
                 SocketMachine = mockSocketMachine.Object,
-                ProtocolHandler = _mockHTTPHandler.Object
+                ProtocolConnectionHandler = _mockHttpHandler.Object
             };
             
             localServer.Start();
             
-            _mockHTTPHandler.Verify(http => http.WillHandle("HTTP"));
-            _mockHTTPHandler.Verify(http => http.Handle(testSockOne.Object));
-            _mockHTTPHandler.Verify(http => http.WillHandle("HTTP"));
-            _mockHTTPHandler.Verify(http => http.Handle(testSockTwo.Object));
+            _mockHttpHandler.Verify(http => http.WillHandle("HTTP"));
+            _mockHttpHandler.Verify(http => http.HandleRequest(testSockOne.Object));
+            _mockHttpHandler.Verify(http => http.WillHandle("HTTP"));
+            _mockHttpHandler.Verify(http => http.HandleRequest(testSockTwo.Object));
         }
     }
 }
