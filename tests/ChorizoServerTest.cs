@@ -28,7 +28,6 @@ namespace Chorizo.Tests
         [Fact]
         public void Start_ShouldStartListeningOnDefaultPortAndHostNameUsingSocketMachine()
         {
-            // Arrange
             var localServer = new Chorizo
             {
                 ProtocolHandler = _mockHTTPHandler.Object,
@@ -36,10 +35,8 @@ namespace Chorizo.Tests
                 SocketMachine = _mockSocketMachine.Object
             };
             
-            // Act
             localServer.Start();
             
-            // Assert
             _mockSocketMachine.Verify(sm => sm.Setup(8000, "localhost"));
             _mockSocketMachine.Verify(sm => sm.Listen(100));
         }
