@@ -6,6 +6,6 @@ namespace Chorizo.Sockets.DotNetSocket
     {
         void Bind(int port, string hostName);
         void Listen(int backlogSize = 100);
-        ICzoSocket Accept();
+        IChorizoSocket Accept();
     }
 }

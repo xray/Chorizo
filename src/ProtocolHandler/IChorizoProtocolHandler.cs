@@ -2,9 +2,9 @@ using Chorizo.Sockets.CzoSocket;
 
 namespace Chorizo.ProtocolHandler
 {
-    public interface ICzoProtocolHandler
+    public interface IChorizoProtocolHandler
     {
         bool WillHandle(string protocol);
-        void Handle(ICzoSocket chorizoSocket);
+        void Handle(IChorizoSocket chorizoSocket);
     }
 }

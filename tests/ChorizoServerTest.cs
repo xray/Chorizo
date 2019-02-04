@@ -7,22 +7,21 @@ namespace Chorizo.Tests
 {
     public class ChorizoServerTest
     {
-        private readonly Mock<ICzoSocket> _mockCzoSocket;
+        private readonly Mock<IChorizoSocket> _mockCzoSocket;
         private readonly Mock<IServerStatus> _mockServerStatus;
         private readonly Mock<ISocketMachine> _mockSocketMachine;
-        private readonly Mock<ICzoProtocolHandler> _mockHTTPHandler;
-        private readonly Mock<ICzoProtocolHandler> _mockTelNetHandler;
+        private readonly Mock<IChorizoProtocolHandler> _mockHTTPHandler;
         
         public ChorizoServerTest()
         {
-            _mockCzoSocket = new Mock<ICzoSocket>();
+            _mockCzoSocket = new Mock<IChorizoSocket>();
             _mockSocketMachine = new Mock<ISocketMachine>();
             _mockSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(_mockCzoSocket.Object);
             _mockServerStatus = new Mock<IServerStatus>();
             _mockServerStatus.SetupSequence(status => status.IsRunning())
                 .Returns(true)
                 .Returns(false);
-            _mockHTTPHandler = new Mock<ICzoProtocolHandler>();
+            _mockHTTPHandler = new Mock<IChorizoProtocolHandler>();
             _mockHTTPHandler.Setup(http => http.WillHandle("HTTP")).Returns(true);
         }
 
@@ -81,8 +80,8 @@ namespace Chorizo.Tests
         {
             var mockSocketMachine = new Mock<ISocketMachine>();
             var mockServerStatus = new Mock<IServerStatus>();
-            var testSockOne = new Mock<ICzoSocket>();
-            var testSockTwo = new Mock<ICzoSocket>();
+            var testSockOne = new Mock<IChorizoSocket>();
+            var testSockTwo = new Mock<IChorizoSocket>();
 
             mockSocketMachine.SetupSequence(sm => sm.AcceptConnection())
                 .Returns(testSockOne.Object)

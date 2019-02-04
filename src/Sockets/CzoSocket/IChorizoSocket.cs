@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace Chorizo.Sockets.CzoSocket
 {
-    public interface ICzoSocket {
+    public interface IChorizoSocket {
         Tuple<byte[], int> Receive(int byteBufferSize);
         int Send(byte[] buffer);
         void Shutdown(SocketShutdown how);

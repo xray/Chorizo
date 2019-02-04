@@ -7,6 +7,6 @@ namespace Chorizo
     {
         void Setup(int port, string hostName);
         void Listen(int backlog);
-        ICzoSocket AcceptConnection();
+        IChorizoSocket AcceptConnection();
     }
 }

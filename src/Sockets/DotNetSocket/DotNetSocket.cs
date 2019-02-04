@@ -45,13 +45,13 @@ namespace Chorizo.Sockets.DotNetSocket
             _notListening = false;
         }
 
-        public ICzoSocket Accept()
+        public IChorizoSocket Accept()
         {
             if (_notListening)
             {
                 throw new System.NotImplementedException();
             }
-            return new CzoSocket.CzoSocket(_wrappedSocket.Accept());
+            return new CzoSocket.ChorizoSocket(_wrappedSocket.Accept());
         }
     }
 }

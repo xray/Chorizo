@@ -21,7 +21,7 @@ namespace Chorizo.SocketMachine
             BuiltInSocket.Listen(backlog);
         }
 
-        public ICzoSocket AcceptConnection()
+        public IChorizoSocket AcceptConnection()
         {
             return BuiltInSocket.Accept();
         }

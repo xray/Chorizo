@@ -9,13 +9,13 @@ namespace Chorizo
     {
         public IServerStatus Status { get; set; }
         public ISocketMachine SocketMachine;
-        public ICzoProtocolHandler ProtocolHandler;
+        public IChorizoProtocolHandler ProtocolHandler;
 
         private ServerConfig Config { get; }
 
         public Chorizo(int port = 8000, string protocol = "HTTP")
         {
-            ProtocolHandler = new CzoTelNetHandler();
+            ProtocolHandler = new ChorizoEchoHandler();
             SocketMachine = SocketMachine ?? new DotNetSocketMachine();
             Config = new ServerConfig(protocol, "localhost", port);
         }

@@ -7,12 +7,12 @@ using Xunit;
 
 namespace Chorizo.Tests
 {
-    public class CzoTelNetHandlerTest
+    public class ChorizoEchoHandlerTest
     {
         [Fact]
         public void WillHandleReturnsTrueIfItCanHandleTheProtocol()
         {
-            var testHandler = new CzoTelNetHandler();
+            var testHandler = new ChorizoEchoHandler();
 
             Assert.True(testHandler.WillHandle("TelNet"));
         }
@@ -20,7 +20,7 @@ namespace Chorizo.Tests
         [Fact]
         public void WillHandleReturnsFalseIfItCannotHandleTheProtocol()
         {
-            var testHandler = new CzoTelNetHandler();
+            var testHandler = new ChorizoEchoHandler();
 
             Assert.False(testHandler.WillHandle("HTTP"));
         }
@@ -29,9 +29,9 @@ namespace Chorizo.Tests
         public void HandleEchosTheDataSentFromTheClientBackToItself()
         {
             
-            var testHandler = new CzoTelNetHandler();
+            var testHandler = new ChorizoEchoHandler();
             var testNums = new byte[] {70, 79, 79, 10};
-            var mockCzoSocket = new Mock<ICzoSocket>();
+            var mockCzoSocket = new Mock<IChorizoSocket>();
             mockCzoSocket.SetupSequence(sock => sock.Receive(It.IsAny<int>()))
                 .Returns(new Tuple<byte[], int>(new byte[] {70}, 1))
                 .Returns(new Tuple<byte[], int>(new byte[] {79}, 1))

@@ -3,10 +3,10 @@ using System.Net.Sockets;
 
 namespace Chorizo.Sockets.CzoSocket
 {
-    public class CzoSocket : ICzoSocket
+    public class ChorizoSocket : IChorizoSocket
     {
         private readonly Socket _wrappedSocket;
-        public CzoSocket(Socket toWrap)
+        public ChorizoSocket(Socket toWrap)
         {
             _wrappedSocket = toWrap;
         }
