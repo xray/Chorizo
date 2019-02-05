@@ -1,12 +1,19 @@
 using System;
 using System.Net.Sockets;
 using System.Text;
+using Chorizo.Logger;
 using Chorizo.Sockets.CzoSocket;
 
 namespace Chorizo.ProtocolHandler
 {
     public class ChorizoEchoConnectionHandler : IChorizoProtocolConnectionHandler
     {
+        private IMiniLogger _optionalLogger;
+        public ChorizoEchoConnectionHandler(IMiniLogger optionalLogger = null)
+        {
+            _optionalLogger = optionalLogger;
+        }
+        
         public void HandleRequest(IChorizoSocket chorizoSocket)
         {
             var retrievedData = retrieveData(chorizoSocket);
@@ -27,7 +34,7 @@ namespace Chorizo.ProtocolHandler
                 Array.Copy(data, 0, receivedData, originalLength, dataLength);
                 bufferText = Encoding.ASCII.GetString(receivedData, 0, receivedData.Length);
             }
-            Console.WriteLine($"Got Data: {bufferText}");
+            _optionalLogger?.Info($"Got Data: {bufferText}");
             return bufferText;
         }
 
@@ -35,7 +42,7 @@ namespace Chorizo.ProtocolHandler
         {
             byte[] msg = Encoding.ASCII.GetBytes(toEcho);
             chorizoSocket.Send(msg);
-            Console.WriteLine("Sent Back the data, closing the connection...");
+            _optionalLogger?.Info("Sent Back the data, closing the connection...");
             chorizoSocket.Disconnect(SocketShutdown.Both);
         }
     }
