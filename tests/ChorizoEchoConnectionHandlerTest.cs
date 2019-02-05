@@ -10,22 +10,6 @@ namespace Chorizo.Tests
     public class ChorizoEchoConnectionHandlerTest
     {
         [Fact]
-        public void WillHandleReturnsTrueIfItCanHandleTheProtocol()
-        {
-            var testHandler = new ChorizoEchoConnectionHandler();
-
-            Assert.True(testHandler.WillHandle("TelNet"));
-        }
-
-        [Fact]
-        public void WillHandleReturnsFalseIfItCannotHandleTheProtocol()
-        {
-            var testHandler = new ChorizoEchoConnectionHandler();
-
-            Assert.False(testHandler.WillHandle("HTTP"));
-        }
-
-        [Fact]
         public void HandleEchosTheDataSentFromTheClientBackToItself()
         {
             

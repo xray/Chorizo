@@ -12,7 +12,8 @@ namespace Chorizo.SocketMachine
             BuiltInSocket = builtInSocket ?? new DotNetSocket();
         }
 
-        public void Setup(int port, string hostName)
+        // rename setup for more clarity between tests and implementation
+        public void Configure(int port, string hostName)
         {
             BuiltInSocket.Bind(port, hostName);
         }

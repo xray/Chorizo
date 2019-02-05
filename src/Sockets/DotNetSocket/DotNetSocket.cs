@@ -9,15 +9,19 @@ namespace Chorizo.Sockets.DotNetSocket
         private Socket _wrappedSocket;
         private bool _unbound;
         private bool _notListening;
-
+        
+        
         public DotNetSocket()
         {
             _unbound = true;
             _notListening = true;
         }
-
+        
+        
         public void Bind(int port, string hostName)
         {
+            // Don't do this, just check to see if the _wrappedSocket is null or not
+            // Same goes 
             if (_unbound != true)
             {
                 throw new System.NotImplementedException();
@@ -51,7 +55,7 @@ namespace Chorizo.Sockets.DotNetSocket
             {
                 throw new System.NotImplementedException();
             }
-            return new CzoSocket.ChorizoSocket(_wrappedSocket.Accept());
+            return new ChorizoSocket(_wrappedSocket.Accept());
         }
     }
 }

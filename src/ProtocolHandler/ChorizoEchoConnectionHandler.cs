@@ -7,13 +7,6 @@ namespace Chorizo.ProtocolHandler
 {
     public class ChorizoEchoConnectionHandler : IChorizoProtocolConnectionHandler
     {
-        private const string Protocol = "TelNet";
-        
-        public bool WillHandle(string protocol)
-        {
-            return protocol == Protocol;
-        }
-
         public void HandleRequest(IChorizoSocket chorizoSocket)
         {
             var retrievedData = retrieveData(chorizoSocket);
@@ -27,6 +20,7 @@ namespace Chorizo.ProtocolHandler
             
             while (bufferText.IndexOf("\n") == -1)
             {
+                // Make this more readable potentially abstract this out into another class
                 var (data, dataLength) = chorizoSocket.Receive(1);
                 var originalLength = receivedData.Length;
                 Array.Resize(ref receivedData, originalLength + dataLength);

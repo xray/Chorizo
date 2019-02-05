@@ -19,7 +19,7 @@ namespace Chorizo.Tests
         {
             var testSm = new DotNetSocketMachine(_mockDotNetSocket.Object);
             
-            testSm.Setup(25565, "localhost");
+            testSm.Configure(25565, "localhost");
             
             _mockDotNetSocket.Verify(dotnet => dotnet.Bind(25565, "localhost"));
         }

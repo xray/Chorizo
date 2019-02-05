@@ -22,35 +22,42 @@ namespace Chorizo.Tests
                 .Returns(true)
                 .Returns(false);
             _mockHttpHandler = new Mock<IChorizoProtocolConnectionHandler>();
-            _mockHttpHandler.Setup(http => http.WillHandle("HTTP")).Returns(true);
         }
 
         [Fact]
         public void Start_ShouldStartListeningOnDefaultPortAndHostNameUsingSocketMachine()
         {
-            var localServer = new Chorizo
-            {
-                ProtocolConnectionHandler = _mockHttpHandler.Object,
-                Status = _mockServerStatus.Object,
-                SocketMachine = _mockSocketMachine.Object
-            };
+            var testChorizoSocket = new Mock<IChorizoSocket>();
+            var testHttpHandler = new Mock<IChorizoProtocolConnectionHandler>();
+            var testSocketMachine = new Mock<ISocketMachine>();
+
+            testSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(testChorizoSocket.Object);
+            
+            var localServer = new Chorizo(
+                8000,
+                "HTTP",
+                _mockServerStatus.Object,
+                testSocketMachine.Object,
+                testHttpHandler.Object
+                );
             
             localServer.Start();
             
-            _mockSocketMachine.Verify(sm => sm.Setup(8000, "localhost"));
-            _mockSocketMachine.Verify(sm => sm.Listen(100));
+            testSocketMachine.Verify(sm => sm.Configure(8000, "localhost"));
+            testSocketMachine.Verify(sm => sm.Listen(100));
         }
 
         [Fact]
         public void GetsAConnectionFromTheSocketMachine()
         {
-            var localServer = new Chorizo
-            {
-                ProtocolConnectionHandler = _mockHttpHandler.Object,
-                SocketMachine = _mockSocketMachine.Object,
-                Status = _mockServerStatus.Object
-            };
-            
+            var localServer = new Chorizo(
+                8000,
+                "HTTP",
+                _mockServerStatus.Object,
+                _mockSocketMachine.Object,
+                _mockHttpHandler.Object
+            );
+
             localServer.Start();
             
             _mockSocketMachine.Verify(sm => sm.AcceptConnection());
@@ -59,16 +66,16 @@ namespace Chorizo.Tests
         [Fact]
         public void HandlesConnection()
         {
-            var localServer = new Chorizo
-            {
-                Status = _mockServerStatus.Object,
-                SocketMachine = _mockSocketMachine.Object,
-                ProtocolConnectionHandler = _mockHttpHandler.Object
-            };
+            var localServer = new Chorizo(
+                8000,
+                "HTTP",
+                _mockServerStatus.Object,
+                _mockSocketMachine.Object,
+                _mockHttpHandler.Object
+            );
             
             localServer.Start();
             
-            _mockHttpHandler.Verify(http => http.WillHandle("HTTP"));
             _mockHttpHandler.Verify(http => http.HandleRequest(_mockCzoSocket.Object));
         }
 
@@ -76,6 +83,7 @@ namespace Chorizo.Tests
         public void AcceptsMultipleConnections()
         {
             var mockSocketMachine = new Mock<ISocketMachine>();
+            
             var mockServerStatus = new Mock<IServerStatus>();
             var testSockOne = new Mock<IChorizoSocket>();
             var testSockTwo = new Mock<IChorizoSocket>();
@@ -89,18 +97,17 @@ namespace Chorizo.Tests
                 .Returns(true)
                 .Returns(false);
 
-            var localServer = new Chorizo()
-            {
-                Status = mockServerStatus.Object,
-                SocketMachine = mockSocketMachine.Object,
-                ProtocolConnectionHandler = _mockHttpHandler.Object
-            };
+            var localServer = new Chorizo(
+                8000,
+                "HTTP",
+                mockServerStatus.Object,
+                mockSocketMachine.Object,
+                _mockHttpHandler.Object
+            );
             
             localServer.Start();
             
-            _mockHttpHandler.Verify(http => http.WillHandle("HTTP"));
             _mockHttpHandler.Verify(http => http.HandleRequest(testSockOne.Object));
-            _mockHttpHandler.Verify(http => http.WillHandle("HTTP"));
             _mockHttpHandler.Verify(http => http.HandleRequest(testSockTwo.Object));
         }
     }
