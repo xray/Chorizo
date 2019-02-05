@@ -5,14 +5,13 @@ namespace Chorizo.SocketMachine
 {
     public class DotNetSocketMachine : ISocketMachine
     {
-        private IDotNetSocket BuiltInSocket { get; set; }
+        private IDotNetSocket BuiltInSocket { get; }
 
         public DotNetSocketMachine(IDotNetSocket builtInSocket = null)
         {
             BuiltInSocket = builtInSocket ?? new DotNetSocket();
         }
 
-        // rename setup for more clarity between tests and implementation
         public void Configure(int port, string hostName)
         {
             BuiltInSocket.Bind(port, hostName);

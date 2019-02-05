@@ -1,4 +1,4 @@
-# Chorizo (C#/.NET) - v0.5  
+# Chorizo (C#/.NET)
 C# Version 7.3 | .NET Version 2.2.0
   
 ## Requirements

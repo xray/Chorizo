@@ -27,35 +27,25 @@ namespace Chorizo.Tests
         [Fact]
         public void Start_ShouldStartListeningOnDefaultPortAndHostNameUsingSocketMachine()
         {
-            var testChorizoSocket = new Mock<IChorizoSocket>();
-            var testHttpHandler = new Mock<IChorizoProtocolConnectionHandler>();
-            var testSocketMachine = new Mock<ISocketMachine>();
-
-            testSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(testChorizoSocket.Object);
-            
             var localServer = new Chorizo(
-                8000,
-                "HTTP",
-                _mockServerStatus.Object,
-                testSocketMachine.Object,
-                testHttpHandler.Object
-                );
+                serverStatus: _mockServerStatus.Object,
+                socketMachine: _mockSocketMachine.Object,
+                protocolConnectionHandler:_mockHttpHandler.Object
+            );
             
             localServer.Start();
             
-            testSocketMachine.Verify(sm => sm.Configure(8000, "localhost"));
-            testSocketMachine.Verify(sm => sm.Listen(100));
+            _mockSocketMachine.Verify(sm => sm.Configure(8000, "localhost"));
+            _mockSocketMachine.Verify(sm => sm.Listen(100));
         }
 
         [Fact]
         public void GetsAConnectionFromTheSocketMachine()
         {
             var localServer = new Chorizo(
-                8000,
-                "HTTP",
-                _mockServerStatus.Object,
-                _mockSocketMachine.Object,
-                _mockHttpHandler.Object
+                serverStatus: _mockServerStatus.Object,
+                socketMachine: _mockSocketMachine.Object,
+                protocolConnectionHandler:_mockHttpHandler.Object
             );
 
             localServer.Start();
@@ -67,11 +57,9 @@ namespace Chorizo.Tests
         public void HandlesConnection()
         {
             var localServer = new Chorizo(
-                8000,
-                "HTTP",
-                _mockServerStatus.Object,
-                _mockSocketMachine.Object,
-                _mockHttpHandler.Object
+                serverStatus: _mockServerStatus.Object,
+                socketMachine: _mockSocketMachine.Object,
+                protocolConnectionHandler:_mockHttpHandler.Object
             );
             
             localServer.Start();
@@ -98,11 +86,9 @@ namespace Chorizo.Tests
                 .Returns(false);
 
             var localServer = new Chorizo(
-                8000,
-                "HTTP",
-                mockServerStatus.Object,
-                mockSocketMachine.Object,
-                _mockHttpHandler.Object
+                serverStatus: mockServerStatus.Object,
+                socketMachine: mockSocketMachine.Object,
+                protocolConnectionHandler:_mockHttpHandler.Object
             );
             
             localServer.Start();

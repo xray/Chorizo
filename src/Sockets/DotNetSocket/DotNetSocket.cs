@@ -9,8 +9,7 @@ namespace Chorizo.Sockets.DotNetSocket
         private Socket _wrappedSocket;
         private bool _unbound;
         private bool _notListening;
-        
-        
+
         public DotNetSocket()
         {
             _unbound = true;
@@ -22,7 +21,7 @@ namespace Chorizo.Sockets.DotNetSocket
         {
             // Don't do this, just check to see if the _wrappedSocket is null or not
             // Same goes 
-            if (_unbound != true)
+            if (_wrappedSocket != null)
             {
                 throw new System.NotImplementedException();
             }
@@ -35,7 +34,6 @@ namespace Chorizo.Sockets.DotNetSocket
                 ProtocolType.Tcp
             );
             _wrappedSocket.Bind(localEndPoint);
-            _unbound = false;
         }
 
         public void Listen(int backlogSize)

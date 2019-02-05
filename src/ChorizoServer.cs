@@ -11,26 +11,18 @@ namespace Chorizo
         private IChorizoProtocolConnectionHandler ProtocolConnectionHandler { get; }
         private ServerConfig Config { get; }
 
-        public Chorizo(int port = 8000, string protocol = "HTTP"){
-            Config = new ServerConfig(protocol, "localhost", port);
-            Status = new ServerStatus();
-            SocketMachine = new DotNetSocketMachine();
-            ProtocolConnectionHandler = new ChorizoEchoConnectionHandler();
-            SocketMachine.Configure(Config.Port, Config.HostName);
-        }
-
         public Chorizo(
-            int port,
-            string protocol,
-            IServerStatus serverStatus,
-            ISocketMachine socketMachine,
-            IChorizoProtocolConnectionHandler protocolConnectionHandler
+            int port = 8000,
+            string protocol = "HTTP",
+            IServerStatus serverStatus = null,
+            ISocketMachine socketMachine = null,
+            IChorizoProtocolConnectionHandler protocolConnectionHandler = null
         )
         {
             Config = new ServerConfig(protocol, "localhost", port);
-            Status = serverStatus;
-            SocketMachine = socketMachine;
-            ProtocolConnectionHandler = protocolConnectionHandler;
+            Status = serverStatus ?? new ServerStatus();
+            SocketMachine = socketMachine ?? new DotNetSocketMachine();
+            ProtocolConnectionHandler = protocolConnectionHandler ?? new ChorizoEchoConnectionHandler();
             SocketMachine.Configure(Config.Port, Config.HostName);
         }
 
