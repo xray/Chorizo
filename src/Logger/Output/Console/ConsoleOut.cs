@@ -4,14 +4,14 @@ namespace Chorizo.Logger.Output.Console
 {
     public class ConsoleOut : ILoggerOut
     {
-        public IDotNetConsole WrappedConsole { private get; set; }
+        public IConsole WrappedConsole { private get; set; }
         private const int Error = 0;
         private const int Info = 1;
         private const int Warning = 2;
 
-        public ConsoleOut(IDotNetConsole wrappedConsole = null)
+        public ConsoleOut(IConsole wrappedConsole = null)
         {
-            WrappedConsole = wrappedConsole ?? new DotNetConsole();
+            WrappedConsole = wrappedConsole ?? new Console();
         }
         
         public void Out(string toOutput, int logLevel, DateTime currentTime)

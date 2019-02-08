@@ -11,7 +11,7 @@ namespace Chorizo.Logger
     {
         private readonly ILoggerOut _userInterfaceOut;
         private readonly ILoggerOut _flatFileOut;
-        private readonly IDotNetDateTime _dateTime;
+        private readonly IDateTimeProvider _dateTimeProvider;
         private readonly int _level;
         private readonly int _destination;
         
@@ -23,12 +23,12 @@ namespace Chorizo.Logger
             LogConfig logConfig,
             ILoggerOut userOut = null, 
             ILoggerOut fileOut = null,
-            IDotNetDateTime dateTime = null
+            IDateTimeProvider dateTimeProvider = null
             )
         {
-            _dateTime = dateTime ?? new DotNetDateTime();
+            _dateTimeProvider = dateTimeProvider ?? new DateTimeProvider();
             _userInterfaceOut = userOut?? new ConsoleOut();
-            _flatFileOut = fileOut ?? new FileOut(_dateTime.Now());
+            _flatFileOut = fileOut ?? new FileOut(_dateTimeProvider.Now());
             _level = LevelConvert(logConfig.Level);
             _destination = DestinationConvert(logConfig.Destination);
         }
@@ -92,14 +92,14 @@ namespace Chorizo.Logger
             switch (_destination)
             {
                 case UserInterface:
-                    _userInterfaceOut.Out(message, logLevel, _dateTime.Now());
+                    _userInterfaceOut.Out(message, logLevel, _dateTimeProvider.Now());
                     break;
                 case File:
-                    _flatFileOut.Out(message, logLevel, _dateTime.Now());
+                    _flatFileOut.Out(message, logLevel, _dateTimeProvider.Now());
                     break;
                 case Both:
-                    _userInterfaceOut.Out(message, logLevel, _dateTime.Now());
-                    _flatFileOut.Out(message, logLevel, _dateTime.Now());
+                    _userInterfaceOut.Out(message, logLevel, _dateTimeProvider.Now());
+                    _flatFileOut.Out(message, logLevel, _dateTimeProvider.Now());
                     break;
             }
         }

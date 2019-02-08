@@ -10,11 +10,11 @@ namespace Chorizo.Tests.Logger
     public class MiniLoggerTest
     {
         private readonly DateTime _testTime = new DateTime(1997, 12, 02, 03, 32, 00, DateTimeKind.Utc);
-        private readonly Mock<IDotNetDateTime> _mockDateTime;
+        private readonly Mock<IDateTimeProvider> _mockDateTime;
 
         public MiniLoggerTest()
         {
-            _mockDateTime = new Mock<IDotNetDateTime>();
+            _mockDateTime = new Mock<IDateTimeProvider>();
             _mockDateTime.Setup(dt => dt.Now()).Returns(_testTime);
         }
         
@@ -25,7 +25,7 @@ namespace Chorizo.Tests.Logger
             var miniLogger = new MiniLogger(
                 new LogConfig("dev", "ui"),
                 mockUIOut.Object,
-                dateTime:_mockDateTime.Object
+                dateTimeProvider:_mockDateTime.Object
             );
             
             const string testMsgOne = "Message 1";
@@ -49,7 +49,7 @@ namespace Chorizo.Tests.Logger
             var miniLogger = new MiniLogger(
                 new LogConfig("prod", "ui"),
                 mockUIOut.Object,
-                dateTime:_mockDateTime.Object
+                dateTimeProvider:_mockDateTime.Object
             );
             
             const string testMsgOne = "Message 1";
@@ -72,7 +72,7 @@ namespace Chorizo.Tests.Logger
             var miniLogger = new MiniLogger(
                 new LogConfig("test", "ui"),
                 mockUIOut.Object,
-                dateTime:_mockDateTime.Object
+                dateTimeProvider:_mockDateTime.Object
             );
             
             const string testMsgOne = "Message 1";

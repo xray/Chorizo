@@ -1,6 +1,6 @@
 namespace Chorizo.Logger.Output.Console
 {
-    public class DotNetConsole : IDotNetConsole
+    public class Console : IConsole
     {
         public void WriteLine(string value)
         {

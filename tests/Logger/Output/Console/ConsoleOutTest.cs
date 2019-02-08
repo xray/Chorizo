@@ -20,7 +20,7 @@ namespace Chorizo.Tests.Logger.Output.Console
         [Fact]
         public void OutGivenAnErrorOutputsAMessageWithAErrorTag()
         {
-            var mockConsole = new Mock<IDotNetConsole>();
+            var mockConsole = new Mock<IConsole>();
             var testConsoleOut = new ConsoleOut
             {
                 WrappedConsole = mockConsole.Object
@@ -34,7 +34,7 @@ namespace Chorizo.Tests.Logger.Output.Console
         [Fact]
         public void OutGivenAInfoOutputsAMessageWithAInfoTag()
         {
-            var mockConsole = new Mock<IDotNetConsole>();
+            var mockConsole = new Mock<IConsole>();
             var testConsoleOut = new ConsoleOut
             {
                 WrappedConsole = mockConsole.Object
@@ -48,7 +48,7 @@ namespace Chorizo.Tests.Logger.Output.Console
         [Fact]
         public void OutGivenAWarningOutputsAMessageWithAWarningTag()
         {
-            var mockConsole = new Mock<IDotNetConsole>();
+            var mockConsole = new Mock<IConsole>();
             var testConsoleOut = new ConsoleOut
             {
                 WrappedConsole = mockConsole.Object

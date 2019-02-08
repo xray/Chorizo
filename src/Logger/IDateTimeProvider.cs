@@ -2,7 +2,7 @@ using System;
 
 namespace Chorizo.Logger
 {
-    public interface IDotNetDateTime
+    public interface IDateTimeProvider
     {
         DateTime Now();
     }
