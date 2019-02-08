@@ -11,5 +11,11 @@ namespace Chorizo.Logger.Output.File
         {
             System.IO.File.AppendAllLines(path, contents);
         }
+
+        public void CreateDirectory(string path)
+        {
+            var file = new System.IO.FileInfo(path);
+            file.Directory.Create();
+        }
     }
 }

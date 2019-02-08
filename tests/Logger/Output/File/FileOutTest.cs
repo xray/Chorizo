@@ -46,6 +46,7 @@ namespace Chorizo.Tests.Logger.Output.File
             
             testFileOut.Out(TestText, 2, _testTime);
             
+            _mockDotNetFile.Verify(file => file.CreateDirectory(TestDirectory));
             _mockDotNetFile.Verify(file => file.WriteAllLines(_testFilePath, expectedInitializationList));
         }
 

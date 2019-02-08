@@ -6,6 +6,7 @@ namespace Chorizo.Logger.Output.File
     {
         private readonly IDotNetFile _wrappedFile;
         private readonly DateTime _creationDateTime;
+        private readonly string _dirPath;
         private readonly string _filePath;
         private bool _fileHasNotBeenInitialized = true;
         private readonly string _logName;
@@ -23,11 +24,10 @@ namespace Chorizo.Logger.Output.File
             _creationDateTime = creationDateTime;
             _wrappedFile = wrappedFile ?? new DotNetFile();
             _logName = fileName ?? "Chorizo";
-            
-            var dirPath = directoryPath ?? @"logs/";
+            _dirPath = directoryPath ?? @"logs/";
             var fileNameTime = _creationDateTime.ToString("yyyy-MM-dd-HHmmss");
             
-            _filePath = $"{dirPath}{fileNameTime}_{_logName}.md";
+            _filePath = $"{_dirPath}{fileNameTime}_{_logName}.md";
         }
 
         public void Out(string toOutput, int logLevel, DateTime currentTime)
@@ -51,6 +51,7 @@ namespace Chorizo.Logger.Output.File
             var nameLine = $"# {_logName}  ";
             var dateLine = $"#### Initialized On {formattedDate}  ";
             var initialLines = new [] {nameLine, dateLine, "---", "---", "" };
+            _wrappedFile.CreateDirectory(_dirPath);
             _wrappedFile.WriteAllLines(_filePath, initialLines);
             _fileHasNotBeenInitialized = false;
         }
