@@ -8,7 +8,6 @@ namespace Chorizo.Logger.Output.File
         private readonly DateTime _creationDateTime;
         private readonly string _dirPath;
         private readonly string _filePath;
-        private bool _fileHasNotBeenInitialized = true;
         private readonly string _logName;
         private const int Error = 0;
         private const int Info = 1;
@@ -26,16 +25,12 @@ namespace Chorizo.Logger.Output.File
             _logName = fileName ?? "Chorizo";
             _dirPath = directoryPath ?? @"logs/";
             var fileNameTime = _creationDateTime.ToString("yyyy-MM-dd-HHmmss");
-            
             _filePath = $"{_dirPath}{fileNameTime}_{_logName}.md";
+            InitializeFile();
         }
 
         public void Out(string toOutput, int logLevel, DateTime currentTime)
         {
-            if (_fileHasNotBeenInitialized)
-            {
-                InitializeFile();
-            }
             var formattedDate = currentTime.ToString("dd/MMM/yyyy:HH:mm:ss zzz");
             var logTypeLine = $"## {LogTypeIdentifier(logLevel)}  ";
             var dateLine = $"**Time**: {formattedDate}";
@@ -53,7 +48,6 @@ namespace Chorizo.Logger.Output.File
             var initialLines = new [] {nameLine, dateLine, "---", "---", "" };
             _wrappedFile.CreateDirectory(_dirPath);
             _wrappedFile.WriteAllLines(_filePath, initialLines);
-            _fileHasNotBeenInitialized = false;
         }
         
         private static string LogTypeIdentifier(int logLevel)

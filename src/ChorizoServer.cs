@@ -13,18 +13,19 @@ namespace Chorizo
         private IChorizoProtocolConnectionHandler ProtocolConnectionHandler { get; }
         private IMiniLogger Logger { get; }
         private ServerConfig Config { get; }
+        private const string DevMode = "dev";
+        private const int DefaultPort = 8000;
 
         public Chorizo(
-            int port = 8000,
-            string protocol = "HTTP",
-            string mode = "dev",
+            int port = DefaultPort,
+            string mode = DevMode,
             IServerStatus serverStatus = null,
             ISocketMachine socketMachine = null,
             IChorizoProtocolConnectionHandler protocolConnectionHandler = null,
             IMiniLogger logger = null
         )
         {
-            Config = new ServerConfig(protocol, "localhost", port, mode);
+            Config = new ServerConfig("localhost", port, mode);
             Logger = logger ?? new MiniLogger(new LogConfig(Config.Mode, "both"));
             Status = serverStatus ?? new ServerStatus();
             SocketMachine = socketMachine ?? new DotNetSocketMachine();
