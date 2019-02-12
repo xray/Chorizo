@@ -3,7 +3,7 @@ using Chorizo.Sockets.DotNetSocket;
 using Moq;
 using Xunit;
 
-namespace Chorizo.Tests
+namespace Chorizo.Tests.SocketMachine
 {
     public class DotNetSocketMachineTest
     {

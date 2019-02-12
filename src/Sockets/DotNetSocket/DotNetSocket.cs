@@ -7,25 +7,9 @@ namespace Chorizo.Sockets.DotNetSocket
     public class DotNetSocket : IDotNetSocket
     {
         private Socket _wrappedSocket;
-        private bool _unbound;
-        private bool _notListening;
-
-        public DotNetSocket()
-        {
-            _unbound = true;
-            _notListening = true;
-        }
-        
         
         public void Bind(int port, string hostName)
         {
-            // Don't do this, just check to see if the _wrappedSocket is null or not
-            // Same goes 
-            if (_wrappedSocket != null)
-            {
-                throw new System.NotImplementedException();
-            }
-            
             var ipAddress = Dns.GetHostEntry(hostName).AddressList[0];
             var localEndPoint = new IPEndPoint(ipAddress, port);
             _wrappedSocket = new Socket(
@@ -33,27 +17,17 @@ namespace Chorizo.Sockets.DotNetSocket
                 SocketType.Stream,
                 ProtocolType.Tcp
             );
-            _wrappedSocket.Bind(localEndPoint);
+            _wrappedSocket?.Bind(localEndPoint);
         }
 
         public void Listen(int backlogSize)
         {
-            if (_unbound)
-            {
-                throw new System.NotImplementedException();
-            }
-
-            _wrappedSocket.Listen(backlogSize);
-            _notListening = false;
+            _wrappedSocket?.Listen(backlogSize);
         }
 
         public IChorizoSocket Accept()
         {
-            if (_notListening)
-            {
-                throw new System.NotImplementedException();
-            }
-            return new ChorizoSocket(_wrappedSocket.Accept());
+            return new ChorizoSocket(_wrappedSocket?.Accept());
         }
     }
 }

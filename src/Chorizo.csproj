@@ -14,8 +14,4 @@
     <Folder Include="Sockets" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NLog" Version="4.5.11" />
-  </ItemGroup>
-
 </Project>

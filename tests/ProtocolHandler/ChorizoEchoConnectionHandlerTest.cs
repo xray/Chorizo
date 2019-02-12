@@ -5,14 +5,13 @@ using Chorizo.Sockets.CzoSocket;
 using Moq;
 using Xunit;
 
-namespace Chorizo.Tests
+namespace Chorizo.Tests.ProtocolHandler
 {
     public class ChorizoEchoConnectionHandlerTest
     {
         [Fact]
         public void HandleEchosTheDataSentFromTheClientBackToItself()
         {
-            
             var testHandler = new ChorizoEchoConnectionHandler();
             var testNums = new byte[] {70, 79, 79, 10};
             var mockCzoSocket = new Mock<IChorizoSocket>();
