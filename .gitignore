@@ -185,4 +185,7 @@ paket-files
 docsrc/content/license.md
 docsrc/content/release-notes.md
 .fake
-docsrc/tools/FSharp.Formatting.svclog
+docsrc/tools/FSharp.Formatting.svc
+
+# Chorizo Logs
+logs/
