@@ -1,10 +1,12 @@
 using System;
+using System.ComponentModel;
 
 namespace Chorizo.Logger.Output.File
 {
     public class FileOut : ILoggerOut
     {
         private readonly IFileWriter _wrappedFileWriter;
+        private readonly IDateTimeProvider _dateTimeProvider;
         private readonly DateTime _creationDateTime;
         private readonly string _dirPath;
         private readonly string _filePath;
@@ -17,21 +19,23 @@ namespace Chorizo.Logger.Output.File
             DateTime creationDateTime,
             string directoryPath = null,
             string fileName = null,
-            IFileWriter wrappedFileWriter = null
+            IFileWriter wrappedFileWriter = null,
+            IDateTimeProvider dateTimeProvider = null
         )
         {
             _creationDateTime = creationDateTime;
             _wrappedFileWriter = wrappedFileWriter ?? new DotNetFileWriter();
+            _dateTimeProvider = dateTimeProvider ?? new DateTimeProvider();
             _logName = fileName ?? "Chorizo";
             _dirPath = directoryPath ?? @"logs/";
-            var fileNameTime = _creationDateTime.ToString("yyyy-MM-dd-HHmmss");
+            var fileNameTime = _dateTimeProvider.FormatDateFile(_creationDateTime);
             _filePath = $"{_dirPath}{fileNameTime}_{_logName}.md";
             InitializeFile();
         }
 
         public void Out(string toOutput, int logLevel, DateTime currentTime)
         {
-            var formattedDate = currentTime.ToString("dd/MMM/yyyy:HH:mm:ss zzz");
+            var formattedDate = _dateTimeProvider.FormatDateISO(_creationDateTime);
             var logTypeLine = $"## {LogTypeIdentifier(logLevel)}  ";
             var dateLine = $"**Time**: {formattedDate}";
             var messageLine = $"> {toOutput}";
@@ -42,7 +46,7 @@ namespace Chorizo.Logger.Output.File
 
         private void InitializeFile()
         {
-            var formattedDate = _creationDateTime.ToString("MMM d, yyyy @ hh:mm tt (K)");
+            var formattedDate = _dateTimeProvider.FormatDateFull(_creationDateTime);
             var nameLine = $"# {_logName}  ";
             var dateLine = $"#### Initialized On {formattedDate}  ";
             var initialLines = new [] {nameLine, dateLine, "---", "---", "" };
