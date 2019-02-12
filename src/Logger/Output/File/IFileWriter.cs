@@ -1,6 +1,6 @@
 namespace Chorizo.Logger.Output.File
 {
-    public interface IDotNetFile
+    public interface IFileWriter
     {
         void WriteAllLines(string path, string[] contents);
         void AppendAllLines(string path, string[] contents);

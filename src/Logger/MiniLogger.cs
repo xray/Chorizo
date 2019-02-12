@@ -1,6 +1,5 @@
 using System;
 using Chorizo.Logger.Configuration;
-using Chorizo.Logger.Exceptions;
 using Chorizo.Logger.Output;
 using Chorizo.Logger.Output.Console;
 using Chorizo.Logger.Output.File;
@@ -9,28 +8,22 @@ namespace Chorizo.Logger
 {
     public class MiniLogger : IMiniLogger
     {
-        private readonly ILoggerOut _userInterfaceOut;
-        private readonly ILoggerOut _flatFileOut;
+        private readonly ILoggerOut[] _loggables;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly int _level;
-        private readonly int _destination;
         
-        private const int UserInterface = 0;
-        private const int File = 1;
-        private const int Both = 2;
+        private enum Levels
+        { test, prod, dev }
         
         public MiniLogger(
             LogConfig logConfig,
-            ILoggerOut userOut = null, 
-            ILoggerOut fileOut = null,
+            ILoggerOut[] loggables = null,
             IDateTimeProvider dateTimeProvider = null
             )
         {
             _dateTimeProvider = dateTimeProvider ?? new DateTimeProvider();
-            _userInterfaceOut = userOut?? new ConsoleOut();
-            _flatFileOut = fileOut ?? new FileOut(_dateTimeProvider.Now());
+            _loggables = loggables ?? new ILoggerOut[]{new ConsoleOut(), new FileOut(_dateTimeProvider.Now())};
             _level = LevelConvert(logConfig.Level);
-            _destination = DestinationConvert(logConfig.Destination);
         }
         
         public void Error(string message)
@@ -50,57 +43,16 @@ namespace Chorizo.Logger
 
         private int LevelConvert(string input)
         {
-            switch (input)
-            {
-                case "test":
-                    return 0;
-                case "prod":
-                    return 1;
-                case "dev":
-                    return 2;
-                default:
-                    throw new LevelDoesNotExistException(
-                        $"{input} is not a valid level for MiniLogger. " +
-                        "The valid levels are \"prod\", \"dev\", and \"test\"."
-                    );
-            }
+            return (int)(Levels) Enum.Parse(typeof(Levels), input);
         }
-        
-        private int DestinationConvert(string input)
-        {
-            switch (input)
-            {
-                case "ui":
-                    return UserInterface;
-                case "file":
-                    return File;
-                case "both":
-                    return Both;
-                default:
-                    throw new DestinationDoesNotExistException(
-                        $"{input} is not a valid destination for MiniLogger. " +
-                        "The valid destinations are \"ui\", \"file\", and \"both\"."
-                    );
-            }
-        }
-
+       
         private void Dispatch(Tuple<int, string> toLog)
         {
             var (logLevel, message) = toLog;
-
-            if (logLevel > _level) return;
-            switch (_destination)
+            foreach (var loggable in _loggables)
             {
-                case UserInterface:
-                    _userInterfaceOut.Out(message, logLevel, _dateTimeProvider.Now());
-                    break;
-                case File:
-                    _flatFileOut.Out(message, logLevel, _dateTimeProvider.Now());
-                    break;
-                case Both:
-                    _userInterfaceOut.Out(message, logLevel, _dateTimeProvider.Now());
-                    _flatFileOut.Out(message, logLevel, _dateTimeProvider.Now());
-                    break;
+                if (logLevel > _level) return;
+                loggable.Out(message, logLevel, _dateTimeProvider.Now());
             }
         }
     }

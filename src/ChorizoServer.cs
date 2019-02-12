@@ -26,7 +26,7 @@ namespace Chorizo
         )
         {
             Config = new ServerConfig("localhost", port, mode);
-            Logger = logger ?? new MiniLogger(new LogConfig(Config.Mode, "both"));
+            Logger = logger ?? new MiniLogger(new LogConfig(Config.Mode));
             Status = serverStatus ?? new ServerStatus();
             SocketMachine = socketMachine ?? new DotNetSocketMachine();
             ProtocolConnectionHandler = protocolConnectionHandler ?? new ChorizoEchoConnectionHandler(Logger);

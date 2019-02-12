@@ -23,9 +23,9 @@ namespace Chorizo.Tests.Logger
         {
             var mockUIOut = new Mock<ILoggerOut>();
             var miniLogger = new MiniLogger(
-                new LogConfig("dev", "ui"),
-                mockUIOut.Object,
-                dateTimeProvider:_mockDateTime.Object
+                new LogConfig("dev"),
+                new []{mockUIOut.Object},
+                _mockDateTime.Object
             );
             
             const string testMsgOne = "Message 1";
@@ -47,9 +47,9 @@ namespace Chorizo.Tests.Logger
         {
             var mockUIOut = new Mock<ILoggerOut>();
             var miniLogger = new MiniLogger(
-                new LogConfig("prod", "ui"),
-                mockUIOut.Object,
-                dateTimeProvider:_mockDateTime.Object
+                new LogConfig("prod"),
+                new []{mockUIOut.Object},
+                _mockDateTime.Object
             );
             
             const string testMsgOne = "Message 1";
@@ -70,9 +70,9 @@ namespace Chorizo.Tests.Logger
         {
             var mockUIOut = new Mock<ILoggerOut>();
             var miniLogger = new MiniLogger(
-                new LogConfig("test", "ui"),
-                mockUIOut.Object,
-                dateTimeProvider:_mockDateTime.Object
+                new LogConfig("test"),
+                new []{mockUIOut.Object},
+                _mockDateTime.Object
             );
             
             const string testMsgOne = "Message 1";
@@ -85,73 +85,6 @@ namespace Chorizo.Tests.Logger
             
             mockUIOut.Verify(ui => ui.Out(testMsgOne, 0, _testTime));
             mockUIOut.Verify(ui => ui.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Once);
-        }
-
-        [Fact]
-        public void WhenConfiguredWithUiDestinationOutputOnlyToUi()
-        {
-            var mockUIOut = new Mock<ILoggerOut>();
-            var mockFileOut = new Mock<ILoggerOut>();
-            
-            var miniLogger = new MiniLogger(
-                new LogConfig("test", "ui"),
-                mockUIOut.Object,
-                mockFileOut.Object,
-                _mockDateTime.Object
-            );
-            
-            const string testMsg = "Message";
-            
-            miniLogger.Error(testMsg);
-            
-            mockUIOut.Verify(ui => ui.Out(testMsg, 0, _testTime));
-            mockUIOut.Verify(ui => ui.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Once);
-            mockFileOut.Verify(file => file.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Never);
-        }
-        
-        [Fact]
-        public void WhenConfiguredWithFileDestinationOutputOnlyToFile()
-        {
-            var mockUIOut = new Mock<ILoggerOut>();
-            var mockFileOut = new Mock<ILoggerOut>();
-            
-            var miniLogger = new MiniLogger(
-                new LogConfig("prod", "file"),
-                mockUIOut.Object,
-                mockFileOut.Object,
-                _mockDateTime.Object
-            );
-            
-            const string testMsg = "Message";
-            
-            miniLogger.Error(testMsg);
-            
-            mockFileOut.Verify(file => file.Out(testMsg, 0, _testTime));
-            mockFileOut.Verify(file => file.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Once);
-            mockUIOut.Verify(ui => ui.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Never);
-        }
-        
-        [Fact]
-        public void WhenConfiguredWithBothDestinationOutputToBoth()
-        {
-            var mockUIOut = new Mock<ILoggerOut>();
-            var mockFileOut = new Mock<ILoggerOut>();
-            
-            var miniLogger = new MiniLogger(
-                new LogConfig("prod", "both"),
-                mockUIOut.Object,
-                mockFileOut.Object,
-                _mockDateTime.Object
-            );
-            
-            const string testMsg = "Message";
-            
-            miniLogger.Error(testMsg);
-            
-            mockUIOut.Verify(ui => ui.Out(testMsg, 0, _testTime));
-            mockUIOut.Verify(ui => ui.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Once);
-            mockFileOut.Verify(file => file.Out(testMsg, 0, _testTime));
-            mockFileOut.Verify(file => file.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Once);
         }
     }
 }

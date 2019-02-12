@@ -4,7 +4,7 @@ namespace Chorizo.Logger.Output.File
 {
     public class FileOut : ILoggerOut
     {
-        private readonly IDotNetFile _wrappedFile;
+        private readonly IFileWriter _wrappedFileWriter;
         private readonly DateTime _creationDateTime;
         private readonly string _dirPath;
         private readonly string _filePath;
@@ -17,11 +17,11 @@ namespace Chorizo.Logger.Output.File
             DateTime creationDateTime,
             string directoryPath = null,
             string fileName = null,
-            IDotNetFile wrappedFile = null
+            IFileWriter wrappedFileWriter = null
         )
         {
             _creationDateTime = creationDateTime;
-            _wrappedFile = wrappedFile ?? new DotNetFile();
+            _wrappedFileWriter = wrappedFileWriter ?? new DotNetFileWriter();
             _logName = fileName ?? "Chorizo";
             _dirPath = directoryPath ?? @"logs/";
             var fileNameTime = _creationDateTime.ToString("yyyy-MM-dd-HHmmss");
@@ -37,7 +37,7 @@ namespace Chorizo.Logger.Output.File
             var messageLine = $"> {toOutput}";
             const string dividerLine = "---";
             var lines = new[] {logTypeLine, dateLine, messageLine, dividerLine};
-            _wrappedFile.AppendAllLines(_filePath, lines);
+            _wrappedFileWriter.AppendAllLines(_filePath, lines);
         }
 
         private void InitializeFile()
@@ -46,8 +46,8 @@ namespace Chorizo.Logger.Output.File
             var nameLine = $"# {_logName}  ";
             var dateLine = $"#### Initialized On {formattedDate}  ";
             var initialLines = new [] {nameLine, dateLine, "---", "---", "" };
-            _wrappedFile.CreateDirectory(_dirPath);
-            _wrappedFile.WriteAllLines(_filePath, initialLines);
+            _wrappedFileWriter.CreateDirectory(_dirPath);
+            _wrappedFileWriter.WriteAllLines(_filePath, initialLines);
         }
         
         private static string LogTypeIdentifier(int logLevel)

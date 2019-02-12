@@ -1,6 +1,6 @@
 namespace Chorizo.Logger.Output.File
 {
-    public class DotNetFile : IDotNetFile
+    public class DotNetFileWriter : IFileWriter
     {
         public void WriteAllLines(string path, string[] contents)
         {

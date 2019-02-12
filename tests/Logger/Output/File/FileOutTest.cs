@@ -17,11 +17,11 @@ namespace Chorizo.Tests.Logger.Output.File
 
         private string _testFilePath;
 
-        private Mock<IDotNetFile> _mockDotNetFile;
+        private Mock<IFileWriter> _mockDotNetFile;
 
         public FileOutTest()
         {
-            _mockDotNetFile = new Mock<IDotNetFile>();
+            _mockDotNetFile = new Mock<IFileWriter>();
             _testFilePath = $"{TestDirectory}{_testFileNameTimeString}_{TestFileName}.md";
         }
 
