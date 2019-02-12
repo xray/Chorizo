@@ -29,12 +29,12 @@ namespace Chorizo.Tests.Logger.Output.File
         public void GivenAnyMessageExpectAFileToBeCreatedAndHaveInitialLinesWritten()
         {
             var testFileOut = new FileOut(
-                _testTime, 
-                TestDirectory, 
-                TestFileName, 
+                _testTime,
+                TestDirectory,
+                TestFileName,
                 _mockDotNetFile.Object
             );
-            
+
             var expectedInitializationList = new[]
             {
                 $"# {TestFileName}  ",
@@ -43,9 +43,9 @@ namespace Chorizo.Tests.Logger.Output.File
                 "---",
                 ""
             };
-            
+
             testFileOut.Out(TestText, 2, _testTime);
-            
+
             _mockDotNetFile.Verify(file => file.CreateDirectory(TestDirectory));
             _mockDotNetFile.Verify(file => file.WriteAllLines(_testFilePath, expectedInitializationList));
         }
@@ -54,12 +54,12 @@ namespace Chorizo.Tests.Logger.Output.File
         public void GivenAnErrorMessageExpectAnInitializedFileToHaveErrorMessageLinesAppended()
         {
             var testFileOut = new FileOut(
-                _testTime, 
-                TestDirectory, 
-                TestFileName, 
+                _testTime,
+                TestDirectory,
+                TestFileName,
                 _mockDotNetFile.Object
             );
-            
+
             var expectedLogList = new[]
             {
                 "## Error  ",
@@ -67,24 +67,24 @@ namespace Chorizo.Tests.Logger.Output.File
                 $"> {TestText}",
                 "---"
             };
-            
+
             testFileOut.Out(TestText, 0, _testTime);
-            
+
             _mockDotNetFile.Verify(file => file.WriteAllLines(It.IsAny<string>(), It.IsAny<string[]>()), Times.Once);
             _mockDotNetFile.Verify(file => file.AppendAllLines(_testFilePath, expectedLogList));
             _mockDotNetFile.Verify(file => file.AppendAllLines(It.IsAny<string>(), It.IsAny<string[]>()), Times.Once);
         }
-        
+
         [Fact]
         public void GivenAInfoMessageExpectAnInitializedFileToHaveInfoMessageLinesAppended()
         {
             var testFileOut = new FileOut(
-                _testTime, 
-                TestDirectory, 
-                TestFileName, 
+                _testTime,
+                TestDirectory,
+                TestFileName,
                 _mockDotNetFile.Object
             );
-            
+
             var expectedLogList = new[]
             {
                 "## Info  ",
@@ -92,24 +92,24 @@ namespace Chorizo.Tests.Logger.Output.File
                 $"> {TestText}",
                 "---"
             };
-            
+
             testFileOut.Out(TestText, 1, _testTime);
-            
+
             _mockDotNetFile.Verify(file => file.WriteAllLines(It.IsAny<string>(), It.IsAny<string[]>()), Times.Once);
             _mockDotNetFile.Verify(file => file.AppendAllLines(_testFilePath, expectedLogList));
             _mockDotNetFile.Verify(file => file.AppendAllLines(It.IsAny<string>(), It.IsAny<string[]>()), Times.Once);
         }
-        
+
         [Fact]
         public void GivenAWarningMessageExpectAnInitializedFileToHaveWarningMessageLinesAppended()
         {
             var testFileOut = new FileOut(
-                _testTime, 
-                TestDirectory, 
-                TestFileName, 
+                _testTime,
+                TestDirectory,
+                TestFileName,
                 _mockDotNetFile.Object
             );
-            
+
             var expectedLogList = new[]
             {
                 "## Warning  ",
@@ -117,9 +117,9 @@ namespace Chorizo.Tests.Logger.Output.File
                 $"> {TestText}",
                 "---"
             };
-            
+
             testFileOut.Out(TestText, 2, _testTime);
-            
+
             _mockDotNetFile.Verify(file => file.WriteAllLines(It.IsAny<string>(), It.IsAny<string[]>()), Times.Once);
             _mockDotNetFile.Verify(file => file.AppendAllLines(_testFilePath, expectedLogList));
             _mockDotNetFile.Verify(file => file.AppendAllLines(It.IsAny<string>(), It.IsAny<string[]>()), Times.Once);

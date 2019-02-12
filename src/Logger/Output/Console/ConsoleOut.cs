@@ -13,7 +13,7 @@ namespace Chorizo.Logger.Output.Console
         {
             WrappedConsole = wrappedConsole ?? new Console();
         }
-        
+
         public void Out(string toOutput, int logLevel, DateTime currentTime)
         {
             var formattedTime = currentTime.ToString("t");

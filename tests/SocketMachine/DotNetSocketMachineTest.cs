@@ -18,9 +18,9 @@ namespace Chorizo.Tests.SocketMachine
         public void SetupCallsBindOnTheBuiltInSocketWithPassedParams()
         {
             var testSm = new DotNetSocketMachine(_mockDotNetSocket.Object);
-            
+
             testSm.Configure(25565, "localhost");
-            
+
             _mockDotNetSocket.Verify(dotnet => dotnet.Bind(25565, "localhost"));
         }
 
@@ -28,9 +28,9 @@ namespace Chorizo.Tests.SocketMachine
         public void ListenCallsListenOnTheBuiltInSocketWithPassedParams()
         {
             var testSm = new DotNetSocketMachine(_mockDotNetSocket.Object);
-            
+
             testSm.Listen(100);
-            
+
             _mockDotNetSocket.Verify(dotnet => dotnet.Listen(100));
         }
 
@@ -38,9 +38,9 @@ namespace Chorizo.Tests.SocketMachine
         public void AcceptConnectionCallsAcceptOnTheBuiltInSocket()
         {
             var testSm = new DotNetSocketMachine(_mockDotNetSocket.Object);
-            
+
             testSm.AcceptConnection();
-            
+
             _mockDotNetSocket.Verify(dotnet => dotnet.Accept());
         }
     }

@@ -20,9 +20,9 @@ namespace Chorizo.Tests.ProtocolHandler
                 .Returns(new Tuple<byte[], int>(new byte[] {79}, 1))
                 .Returns(new Tuple<byte[], int>(new byte[] {79}, 1))
                 .Returns(new Tuple<byte[], int>(new byte[] {10}, 1));
-            
+
             testHandler.HandleRequest(mockCzoSocket.Object);
-            
+
             mockCzoSocket.Verify(sock => sock.Receive(It.IsAny<int>()), Times.Exactly(4));
             mockCzoSocket.Verify(sock => sock.Send(testNums));
             mockCzoSocket.Verify(sock => sock.Disconnect(SocketShutdown.Both));

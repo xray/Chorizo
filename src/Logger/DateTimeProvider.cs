@@ -3,7 +3,7 @@ using System;
 namespace Chorizo.Logger
 {
     public class DateTimeProvider : IDateTimeProvider
-    {        
+    {
         public DateTime Now()
         {
             return DateTime.Now;
@@ -13,7 +13,7 @@ namespace Chorizo.Logger
         {
             return date.ToString("yyyy-MM-dd-HHmmss");
         }
-        
+
         public string FormatDateFull(DateTime date)
         {
             return date.ToString("MMM d, yyyy @ hh:mm tt (K)");

@@ -15,8 +15,8 @@ namespace Chorizo.Tests.Logger.Output.Console
         {
             _testTimeString = _testTime.ToString("t");
         }
-        
-        
+
+
         [Fact]
         public void OutGivenAnErrorOutputsAMessageWithAErrorTag()
         {
@@ -25,12 +25,12 @@ namespace Chorizo.Tests.Logger.Output.Console
             {
                 WrappedConsole = mockConsole.Object
             };
-            
+
             testConsoleOut.Out(TestText, 0, _testTime);
-            
+
             mockConsole.Verify(console => console.WriteLine($"{_testTimeString} -> [\x1b[31mERROR\x1b[0m] {TestText}"));
         }
-        
+
         [Fact]
         public void OutGivenAInfoOutputsAMessageWithAInfoTag()
         {
@@ -39,12 +39,12 @@ namespace Chorizo.Tests.Logger.Output.Console
             {
                 WrappedConsole = mockConsole.Object
             };
-            
+
             testConsoleOut.Out(TestText, 1, _testTime);
-            
+
             mockConsole.Verify(console => console.WriteLine($"{_testTimeString} -> [\x1b[92mINFO\x1b[0m] {TestText}"));
         }
-        
+
         [Fact]
         public void OutGivenAWarningOutputsAMessageWithAWarningTag()
         {
@@ -53,9 +53,9 @@ namespace Chorizo.Tests.Logger.Output.Console
             {
                 WrappedConsole = mockConsole.Object
             };
-            
+
             testConsoleOut.Out(TestText, 2, _testTime);
-            
+
             mockConsole.Verify(console => console.WriteLine($"{_testTimeString} -> [\x1b[93mWARNING\x1b[0m] {TestText}"));
         }
     }
