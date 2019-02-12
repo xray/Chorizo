@@ -71,7 +71,7 @@ namespace Chorizo.Tests.Logger
             var mockUIOut = new Mock<ILoggerOut>();
             var miniLogger = new MiniLogger(
                 new LogConfig("test"),
-                new []{mockUIOut.Object},
+                new []{ mockUIOut.Object },
                 _mockDateTime.Object
             );
             

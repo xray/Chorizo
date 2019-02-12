@@ -1,3 +1,4 @@
+using System.Dynamic;
 using Chorizo.Logger;
 using Chorizo.Logger.Configuration;
 using Chorizo.ProtocolHandler;
@@ -13,6 +14,7 @@ namespace Chorizo
         private IChorizoProtocolConnectionHandler ProtocolConnectionHandler { get; }
         private IMiniLogger Logger { get; }
         private ServerConfig Config { get; }
+        private const string DefaultHostName = "localhost";
         private const string DevMode = "dev";
         private const int DefaultPort = 8000;
 
@@ -25,7 +27,7 @@ namespace Chorizo
             IMiniLogger logger = null
         )
         {
-            Config = new ServerConfig("localhost", port, mode);
+            Config = new ServerConfig(DefaultHostName, port, mode);
             Logger = logger ?? new MiniLogger(new LogConfig(Config.Mode));
             Status = serverStatus ?? new ServerStatus();
             SocketMachine = socketMachine ?? new DotNetSocketMachine();
