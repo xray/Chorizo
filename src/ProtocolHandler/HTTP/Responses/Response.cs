@@ -5,20 +5,19 @@ using Chorizo.Sockets.CzoSocket;
 
 namespace Chorizo.ProtocolHandler.HTTP.Responses
 {
-    public class Response
+    public class Response : IEquatable<Response>
     {
-        private IChorizoSocket _socket;
-        private ResponseCodes _responseCodes;
+        private readonly IChorizoSocket _socket;
+        private readonly ResponseCodes _responseCodes;
         private string _protocol = "HTTP/1.1";
         private int _statusCode = 200;
         private string _statusText = "OK";
-        private Dictionary<String, String> _headers;
+        private readonly Dictionary<string, string> _headers;
 
         public Response(IChorizoSocket chorizoSocket)
         {
             _socket = chorizoSocket;
-            _headers = new Dictionary<string, string>();
-            _headers.Add("Server", "Chorizo");
+            _headers = new Dictionary<string, string> {{"Server", "Chorizo"}};
             _responseCodes = new ResponseCodes();
         }
 
@@ -62,6 +61,11 @@ namespace Chorizo.ProtocolHandler.HTTP.Responses
             var encodedResponse = Encoding.UTF8.GetBytes(formattedResponse);
             _socket.Send(encodedResponse);
             _socket.Disconnect();
+        }
+
+        public bool Equals(Response other)
+        {
+            return _socket == other._socket;
         }
     }
 }
