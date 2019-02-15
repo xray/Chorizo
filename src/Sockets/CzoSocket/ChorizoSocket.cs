@@ -1,5 +1,6 @@
 using System;
 using System.Net.Sockets;
+using System.Text;
 
 namespace Chorizo.Sockets.CzoSocket
 {
@@ -23,7 +24,7 @@ namespace Chorizo.Sockets.CzoSocket
             return _wrappedSocket.Send(buffer);
         }
 
-        public void Disconnect(SocketShutdown how)
+        public void Disconnect(SocketShutdown how = SocketShutdown.Both)
         {
             _wrappedSocket.Shutdown(how);
             _wrappedSocket.Close();

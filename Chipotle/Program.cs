@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Chipotle
 {
@@ -6,10 +7,21 @@ namespace Chipotle
     {
         static void Main()
         {
-            var port = 8000;
-            var server = new Chorizo.Chorizo(port, "TelNet");
+            var port = 5000;
+            var app = new Chorizo.Chorizo(port);
+
+            app.ProtocolConnectionHandler.Router().Get("/", (req, res) =>
+            {
+                res.Status(200).Send("<html><h1>Hello World!</h1><h2>I am Chorizo</h2></html>");
+            });
+
+            app.ProtocolConnectionHandler.Router().Get("/simple_get", (req, res) =>
+            {
+                res.Status(200).Send();
+            });
+
             Console.WriteLine($"Starting to listen on port {port}");
-            server.Start();
+            app.Start();
         }
     }
 }

@@ -2,9 +2,10 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 using Chorizo.Logger;
+using Chorizo.ProtocolHandler.HTTP.Router;
 using Chorizo.Sockets.CzoSocket;
 
-namespace Chorizo.ProtocolHandler
+namespace Chorizo.ProtocolHandler.Echo
 {
     public class ChorizoEchoConnectionHandler : IChorizoProtocolConnectionHandler
     {
@@ -18,6 +19,11 @@ namespace Chorizo.ProtocolHandler
         {
             var retrievedData = retrieveData(chorizoSocket);
             echoData(chorizoSocket, retrievedData);
+        }
+
+        public IRouter Router()
+        {
+            throw new NotImplementedException();
         }
 
         private string retrieveData(IChorizoSocket chorizoSocket)

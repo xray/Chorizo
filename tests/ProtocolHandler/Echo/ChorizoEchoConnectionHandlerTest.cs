@@ -1,11 +1,11 @@
 using System;
 using System.Net.Sockets;
-using Chorizo.ProtocolHandler;
+using Chorizo.ProtocolHandler.Echo;
 using Chorizo.Sockets.CzoSocket;
 using Moq;
 using Xunit;
 
-namespace Chorizo.Tests.ProtocolHandler
+namespace Chorizo.Tests.ProtocolHandler.Echo
 {
     public class ChorizoEchoConnectionHandlerTest
     {

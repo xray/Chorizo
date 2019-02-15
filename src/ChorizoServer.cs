@@ -1,6 +1,7 @@
 using Chorizo.Logger;
 using Chorizo.Logger.Configuration;
 using Chorizo.ProtocolHandler;
+using Chorizo.ProtocolHandler.HTTP;
 using Chorizo.ServerConfiguration;
 using Chorizo.SocketMachine;
 
@@ -10,7 +11,7 @@ namespace Chorizo
     {
         private IServerStatus Status { get; }
         private ISocketMachine SocketMachine { get; }
-        private IChorizoProtocolConnectionHandler ProtocolConnectionHandler { get; }
+        public IChorizoProtocolConnectionHandler ProtocolConnectionHandler { get; }
         private IMiniLogger Logger { get; }
         private ServerConfig Config { get; }
 
@@ -27,7 +28,7 @@ namespace Chorizo
             Logger = logger ?? new MiniLogger(new LogConfig(Config.Mode));
             Status = serverStatus ?? new ServerStatus();
             SocketMachine = socketMachine ?? new DotNetSocketMachine();
-            ProtocolConnectionHandler = protocolConnectionHandler ?? new ChorizoEchoConnectionHandler(Logger);
+            ProtocolConnectionHandler = protocolConnectionHandler ?? new ChorizoHTTPConnectionHandler(Logger);
             SocketMachine.Configure(Config.Port, Config.HostName);
         }
 
