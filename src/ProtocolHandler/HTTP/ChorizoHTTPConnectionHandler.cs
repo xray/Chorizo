@@ -36,9 +36,9 @@ namespace Chorizo.ProtocolHandler.HTTP
             {
                 var parsedRequestInfo = _rawRequestParser.Parse(rawStartLineAndHeaders);
                 var contentLength = 0;
-                if (parsedRequestInfo.Headers.ContainsKey("Content-Length"))
+                if (parsedRequestInfo.Headers.ContainsKey("CONTENT-LENGTH"))
                 {
-                    int.TryParse(parsedRequestInfo.Headers["Content-Length"], out contentLength);
+                    int.TryParse(parsedRequestInfo.Headers["CONTENT-LENGTH"], out contentLength);
                 }
                 var requestBody = receiveReqBody(chorizoSocket, contentLength);
                 var incomingRequest = new Request(parsedRequestInfo, requestBody);
@@ -59,20 +59,16 @@ namespace Chorizo.ProtocolHandler.HTTP
 
             while (startLineAndHeaders.IndexOf("\r\n\r\n") == -1)
             {
-                if (receivedData.Length == 8000)
-                {
-                    // TODO: Replace with actual exception that says the request StartLine and Headers were too large
-                    throw new NotImplementedException();
-                }
                 var (data, bytesReceived) = chorizoSocket.Receive(1);
+                if (bytesReceived == 0 || receivedData.Length == 8000)
+                {
+                    startLineAndHeaders = "";
+                    break;
+                }
                 var originalLength = receivedData.Length;
                 Array.Resize(ref receivedData, originalLength + 1);
                 Array.Copy(data, 0, receivedData, originalLength, 1);
                 startLineAndHeaders = Encoding.UTF8.GetString(receivedData, 0, receivedData.Length);
-                if (bytesReceived == 0)
-                {
-                    break;
-                }
             }
             return startLineAndHeaders;
         }

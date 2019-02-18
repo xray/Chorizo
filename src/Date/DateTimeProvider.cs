@@ -1,6 +1,6 @@
 using System;
 
-namespace Chorizo.Logger
+namespace Chorizo.Date
 {
     public class DateTimeProvider : IDateTimeProvider
     {

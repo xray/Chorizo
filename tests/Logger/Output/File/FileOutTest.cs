@@ -7,10 +7,10 @@ namespace Chorizo.Tests.Logger.Output.File
 {
     public class FileOutTest
     {
-        private readonly DateTime _testTime = new DateTime(1997, 12, 02, 03, 32, 00, DateTimeKind.Utc);
-        private const string  _testFileNameTimeString = "1997-12-02-033200";
-        private const string _testInitializationTimeString = "Dec 2, 1997 @ 03:32 AM (Z)";
-        private const string _testLogTimeString = "02/Dec/1997:03:32:00 +00:00";
+        private readonly DateTime _testTime = new DateTime(1997, 12, 02, 15, 10, 00, DateTimeKind.Utc);
+        private const string  _testFileNameTimeString = "1997-12-02-151000";
+        private const string _testInitializationTimeString = "Dec 2, 1997 @ 03:10 PM (Z)";
+        private const string _testLogTimeString = "02/Dec/1997:15:10:00 +00:00";
         private const string TestFileName = "TestLog";
         private const string TestDirectory = @"/test/123/";
         private const string TestText = "Test";

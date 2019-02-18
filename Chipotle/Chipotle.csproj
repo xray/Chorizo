@@ -44,5 +44,9 @@
       <DeployManifest Remove="obj\Debug\netcoreapp2.2\Chipotle.application" />
       <DeployManifest Remove="obj\Debug\netcoreapp2.2\Chipotle.application" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="logs" />
+    </ItemGroup>
 
 </Project>

@@ -1,14 +1,26 @@
+using Chorizo.ProtocolHandler.HTTP.Requests;
+using Chorizo.ProtocolHandler.HTTP.Responses;
+
 namespace Chorizo.ProtocolHandler.HTTP.Router
 {
     public class Route
     {
-        public string HttpMethod;
-
-        public readonly Action Go;
+        private readonly string _method;
+        private readonly Action _action;
         public Route(string method, Action action)
         {
-            HttpMethod = method;
-            Go = action;
+            _method = method;
+            _action = action;
+        }
+
+        public void Go(IRequest req, IResponse res)
+        {
+            _action(req, res);
+        }
+
+        public string HttpMethod()
+        {
+            return _method;
         }
     }
 }

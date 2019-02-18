@@ -5,7 +5,7 @@ namespace Chorizo.ProtocolHandler.HTTP.Router
 {
     public interface IRouter
     {
-        void Match(Request req, Response res);
+        void Match(IRequest req, IResponse res);
 
         void Get(string path, Action action);
     }

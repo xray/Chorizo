@@ -6,17 +6,17 @@ namespace Chorizo.ProtocolHandler.HTTP.Router
 {
     public class ChorizoRouter:IRouter
     {
-        private Dictionary<string, Route> _routes;
+        private readonly Dictionary<string, Route> _routes;
         public ChorizoRouter()
         {
             _routes = new Dictionary<string, Route>();
         }
 
-        public void Match(Request req, Response res)
+        public void Match(IRequest req, IResponse res)
         {
-            if (_routes.ContainsKey(req.Path) && _routes[req.Path].HttpMethod == req.Method)
+            if (_routes.ContainsKey(req.Path()) && _routes[req.Path()].HttpMethod() == req.Method())
             {
-                _routes[req.Path].Go(req, res);
+                _routes[req.Path()].Go(req, res);
             }
             else
             {

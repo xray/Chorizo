@@ -8,7 +8,7 @@ namespace Chorizo.Tests.Logger.Output.Console
     public class ConsoleOutTest
     {
         private const string TestText = "Test";
-        private DateTime _testTime = new DateTime(1997, 12, 02, 03, 32, 00, DateTimeKind.Utc);
+        private DateTime _testTime = new DateTime(1997, 12, 02, 15, 10, 00, DateTimeKind.Utc);
         private string _testTimeString;
 
         public ConsoleOutTest()

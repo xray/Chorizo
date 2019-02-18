@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Text;
 
 namespace Chipotle
 {
     class Program
     {
-        static void Main()
+        public static void Main()
         {
             var port = 5000;
             var app = new Chorizo.Chorizo(port);

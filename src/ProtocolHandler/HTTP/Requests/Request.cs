@@ -2,50 +2,63 @@ using System.Collections.Generic;
 
 namespace Chorizo.ProtocolHandler.HTTP.Requests
 {
-    public class Request
+    public class Request:IRequest
     {
-        public readonly string Method;
-        public readonly string Path;
-        public readonly string Protocol;
-        public readonly Dictionary<string, string> Headers;
-        public readonly byte[] Body;
+        private readonly string _method;
+        private readonly string _path;
+        private readonly string _protocol;
+        private readonly Dictionary<string, string> _headers;
+        private readonly byte[] _body;
 
         public Request(ParsedRequestData reqData, byte[] body)
         {
-            Method = reqData.Method;
-            Path = reqData.Path;
-            Protocol = reqData.Protocol;
-            Headers = SanitizeHeaders(reqData.Headers);
-            Body = body;
+            _method = reqData.Method;
+            _path = reqData.Path;
+            _protocol = reqData.Protocol;
+            _headers = reqData.Headers;
+            _body = body;
         }
 
-        private static Dictionary<string, string> SanitizeHeaders(Dictionary<string, string> headers)
+        public string Method()
         {
-            var sanitizedHeaders = new Dictionary<string, string>();
+            return _method;
+        }
 
-            foreach (var (key, value) in headers)
-            {
-                sanitizedHeaders.Add(key.ToUpper(), value);
-            }
+        public string Path()
+        {
+            return _path;
+        }
 
-            return sanitizedHeaders;
+        public string Protocol()
+        {
+            return _protocol;
+        }
+
+        public Dictionary<string, string> Headers()
+        {
+            return _headers;
+        }
+
+        public byte[] Body()
+        {
+            return _body;
         }
 
         public bool Equals(Request other)
         {
-            var mppMatch = Method == other.Method &&
-                            Path == other.Path &&
-                            Protocol == other.Protocol;
+            var mppMatch = Method() == other.Method() &&
+                           Path() == other.Path() &&
+                           Protocol() == other.Protocol();
 
             if (!mppMatch) return false;
 
-            foreach (var (key, value) in Headers)
+            foreach (var (key, value) in Headers())
             {
-                if (!other.Headers.ContainsKey(key)) return false;
-                if (other.Headers[key] != value) return false;
+                if (!other.Headers().ContainsKey(key)) return false;
+                if (other.Headers()[key] != value) return false;
             }
 
-            return Body == other.Body;
+            return Body() == other.Body();
         }
     }
 }

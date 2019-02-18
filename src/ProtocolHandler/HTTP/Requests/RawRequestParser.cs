@@ -15,7 +15,7 @@ namespace Chorizo.ProtocolHandler.HTTP.Requests
             foreach (var header in reqHeadersLines)
             {
                 var keyAndValue = header.Split(": ");
-                reqHeaders.Add(keyAndValue[0], keyAndValue[1]);
+                reqHeaders.Add(keyAndValue[0].ToUpper(), keyAndValue[1]);
             }
 
             return new ParsedRequestData
