@@ -37,12 +37,7 @@ namespace Chorizo.Tests.ProtocolHandler
             };
 
             _testGetRequestString = "GET / HTTP/1.1\r\n" +
-                                    "cache-control: no-cache\r\n" +
-                                    "Postman-Token: e6ff99e3-02c5-4c16-a4e7-0fb1896333c6\r\n" +
-                                    "User-Agent: PostmanRuntime/7.4.0\r\n" +
-                                    "Accept: */*\r\n" +
-                                    "Host: localhost:5000\r\n" +
-                                    "accept-encoding: gzip, deflate\r\n" +
+                                    "foo: bar\r\n" +
                                     "\r\n";
             _testGetRequestBytes = Encoding.UTF8.GetBytes(_testGetRequestString);
 
@@ -52,12 +47,7 @@ namespace Chorizo.Tests.ProtocolHandler
                 "HTTP/1.1",
                 new Dictionary<string, string>
                 {
-                    {"cache-control", "no-cache"},
-                    {"Postman-Token", "e6ff99e3-02c5-4c16-a4e7-0fb1896333c6"},
-                    {"User-Agent", "PostmanRuntime/7.4.0"},
-                    {"Accept", "*/*"},
-                    {"Host", "localhost:5000"},
-                    {"accept-encoding", "gzip, deflate"}
+                    {"foo", "bar"}
                 }
             );
         }
@@ -104,9 +94,7 @@ namespace Chorizo.Tests.ProtocolHandler
                 "OK",
                 new Dictionary<string, string>
                 {
-                    {"Connection", "Closed"},
-                    {"date", "Tue, 02 Dec 1997 15:10:00 GMT"},
-                    {"Server", "Chorizo"}
+                    {"fake", "header"}
                 }
             );
             _mockSocketReader.Setup(sr => sr.ReadSocket(It.IsAny<IChorizoSocket>()))
