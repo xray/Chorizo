@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Chorizo.ProtocolHandler;
+using Chorizo.ProtocolHandler.DataParser;
 using Chorizo.ProtocolHandler.SocketReader;
 using Chorizo.Sockets.CzoSocket;
 using Xunit;
@@ -10,7 +11,7 @@ namespace Chorizo.Tests.ProtocolHandler
 {
     public class ChorizoHTTPConnectionHandlerTest
     {
-        private readonly ChorizoHTTPConnectionHandler _testConnectionHandler;
+        private readonly ChorizoHttpConnectionHandler _testConnectionHandler;
         private readonly Mock<IChorizoSocket> _mockSocket;
         private readonly Mock<IHTTPSocketReader> _mockSocketReader;
         private readonly Mock<IDataParser> _mockDataParser;
@@ -28,7 +29,7 @@ namespace Chorizo.Tests.ProtocolHandler
             _mockResponseRetriever = new Mock<IResponseRetriever>();
             _mockResponseSender = new Mock<IResponseSender>();
 
-            _testConnectionHandler = new ChorizoHTTPConnectionHandler()
+            _testConnectionHandler = new ChorizoHttpConnectionHandler()
             {
                 HttpSocketReader = _mockSocketReader.Object,
                 DataParser = _mockDataParser.Object,

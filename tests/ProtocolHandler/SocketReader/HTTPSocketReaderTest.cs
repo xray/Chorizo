@@ -22,7 +22,8 @@ namespace Chorizo.Tests.ProtocolHandler.SocketReader
             mockSocket.Setup(sock => sock.Receive(It.IsAny<int>()))
                 .Returns(() => new Tuple<byte[], int>(new[] {testGetRequestBytes[byteCount++]}, 1));
 
-            var testSocketReader = new HTTPSocketReader();
+            var testSocketReader = new HttpSocketReader();
+
 
             Assert.Equal(testSocketReader.ReadSocket(mockSocket.Object), testGetRequestBytes);
             mockSocket.Verify(sock => sock.Receive(1), Times.Exactly(28));

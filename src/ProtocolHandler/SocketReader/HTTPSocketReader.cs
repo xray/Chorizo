@@ -4,7 +4,7 @@ using Chorizo.Sockets.CzoSocket;
 
 namespace Chorizo.ProtocolHandler.SocketReader
 {
-    public class HTTPSocketReader:IHTTPSocketReader
+    public class HttpSocketReader:IHTTPSocketReader
     {
         public byte[] ReadSocket(IChorizoSocket socket)
         {

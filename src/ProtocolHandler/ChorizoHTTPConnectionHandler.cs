@@ -1,13 +1,9 @@
 using System.Collections.Generic;
+using Chorizo.ProtocolHandler.DataParser;
 using Chorizo.Sockets.CzoSocket;
 using Chorizo.ProtocolHandler.SocketReader;
 
 namespace Chorizo.ProtocolHandler{
-    public interface IDataParser
-    {
-        Request Parse(byte[] startLineAndHeadersBytes);
-    }
-
     public interface IResponseRetriever
     {
         Response Retrieve(Request req);
@@ -34,23 +30,7 @@ namespace Chorizo.ProtocolHandler{
         }
     }
 
-    public struct Request
-    {
-        public readonly string Method;
-        public readonly string Path;
-        public readonly string Protocol;
-        public readonly Dictionary<string, string> Headers;
-
-        public Request(string method, string path, string protocol, Dictionary<string, string> headers)
-        {
-            Method = method;
-            Path = path;
-            Protocol = protocol;
-            Headers = headers;
-        }
-    }
-
-    public class ChorizoHTTPConnectionHandler {
+    public class ChorizoHttpConnectionHandler {
 
         public IHTTPSocketReader HttpSocketReader;
         public IDataParser DataParser { get; set; }
