@@ -11,7 +11,6 @@ namespace Chorizo.Tests.ProtocolHandler.DataParser
         public void ParseTakesInBytesOfARequestWithNoHeadersAndReturnsARequest()
         {
             const string testGetRequestString = "GET / HTTP/1.1\r\n" +
-                                                "foo: bar\r\n" +
                                                 "\r\n";
             var testGetRequestBytes = Encoding.UTF8.GetBytes(testGetRequestString);
 
@@ -23,9 +22,10 @@ namespace Chorizo.Tests.ProtocolHandler.DataParser
             );
 
             var testDataParser = new BasicDataParser();
+            var result = testDataParser.Parse(testGetRequestBytes);
 
 
-            Assert.Equal(testDataParser.Parse(testGetRequestBytes), testRequest);
+            Assert.True(result.Equals(testRequest));
         }
     }
 }
