@@ -42,10 +42,6 @@ namespace Chorizo.ProtocolHandler{
             var request = DataParser.Parse(bytes);
             var response = ResponseRetriever.Retrieve(request);
             ResponseSender.Send(socket, response);
-            // read data from socket
-            // parse data
-            // get http response
-            // write data
         }
     }
 }

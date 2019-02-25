@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Chorizo.Tests.ProtocolHandler.DataParser
 {
-    public class BasicDataParserTest
+    public class RequestParserTest
     {
         [Fact]
         public void ParseTakesInBytesOfARequestWithNoHeadersAndReturnsARequest()
@@ -17,13 +17,11 @@ namespace Chorizo.Tests.ProtocolHandler.DataParser
             var testRequest = new Request(
                 "GET",
                 "/",
-                "HTTP/1.1",
-                new Dictionary<string, string>()
+                "HTTP/1.1"
             );
 
-            var testDataParser = new BasicDataParser();
+            var testDataParser = new RequestParser();
             var result = testDataParser.Parse(testGetRequestBytes);
-
 
             Assert.True(result.Equals(testRequest));
         }
@@ -46,7 +44,8 @@ namespace Chorizo.Tests.ProtocolHandler.DataParser
                 }
             );
 
-            var testDataParser = new BasicDataParser();
+
+            var testDataParser = new RequestParser();
             var result = testDataParser.Parse(testGetRequestBytes);
 
 

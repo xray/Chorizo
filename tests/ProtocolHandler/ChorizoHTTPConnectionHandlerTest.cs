@@ -38,18 +38,13 @@ namespace Chorizo.Tests.ProtocolHandler
             };
 
             _testGetRequestString = "GET / HTTP/1.1\r\n" +
-                                    "foo: bar\r\n" +
                                     "\r\n";
             _testGetRequestBytes = Encoding.UTF8.GetBytes(_testGetRequestString);
 
             _testGetRequest = new Request(
                 "GET",
                 "/",
-                "HTTP/1.1",
-                new Dictionary<string, string>
-                {
-                    {"foo", "bar"}
-                }
+                "HTTP/1.1"
             );
         }
 
