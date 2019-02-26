@@ -25,5 +25,10 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
         {
             return _name.Equals(other.Name()) && _value.Equals(other.Value());
         }
+
+        public override string ToString()
+        {
+            return $"{_name}: {_value}\r\n";
+        }
     }
 }

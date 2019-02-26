@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace Chorizo.ProtocolHandler.ResponseRetriever
 {
@@ -51,6 +52,23 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
             Array.Copy(_headers, newHeaders, _headers.Length);
             newHeaders[_headers.Length] = new Header(name, value);
             return new Response(_protocol, _statusCode, _statusText, newHeaders);
+        }
+
+        public override string ToString()
+        {
+            var outputString = "";
+            outputString += $"{_protocol} {_statusCode} {_statusText}\r\n";
+            foreach (var header in _headers)
+            {
+                outputString += header.ToString();
+            }
+            outputString += "\r\n";
+            return outputString;
+        }
+
+        public byte[] ToByteArray()
+        {
+            return Encoding.UTF8.GetBytes(ToString());
         }
     }
 }

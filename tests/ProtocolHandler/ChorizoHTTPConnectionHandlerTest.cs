@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Text;
 using Chorizo.ProtocolHandler;
 using Chorizo.ProtocolHandler.DataParser;
@@ -7,6 +7,7 @@ using Chorizo.ProtocolHandler.SocketReader;
 using Chorizo.Sockets.CzoSocket;
 using Xunit;
 using Moq;
+using Xunit.Abstractions;
 
 namespace Chorizo.Tests.ProtocolHandler
 {
@@ -17,10 +18,10 @@ namespace Chorizo.Tests.ProtocolHandler
         private readonly Mock<IHTTPSocketReader> _mockSocketReader;
         private readonly Mock<IDataParser> _mockDataParser;
         private readonly Mock<IResponseRetriever> _mockResponseRetriever;
-        private readonly Mock<IResponseSender> _mockResponseSender;
         private readonly string _testGetRequestString;
         private readonly byte[] _testGetRequestBytes;
         private readonly Request _testGetRequest;
+        private Response _testGetResponse;
 
         public ChorizoHTTPConnectionHandlerTest()
         {
@@ -28,14 +29,12 @@ namespace Chorizo.Tests.ProtocolHandler
             _mockSocketReader = new Mock<IHTTPSocketReader>();
             _mockDataParser = new Mock<IDataParser>();
             _mockResponseRetriever = new Mock<IResponseRetriever>();
-            _mockResponseSender = new Mock<IResponseSender>();
 
             _testConnectionHandler = new ChorizoHttpConnectionHandler()
             {
                 HttpSocketReader = _mockSocketReader.Object,
                 DataParser = _mockDataParser.Object,
-                ResponseRetriever = _mockResponseRetriever.Object,
-                ResponseSender = _mockResponseSender.Object
+                ResponseRetriever = _mockResponseRetriever.Object
             };
 
             _testGetRequestString = "GET / HTTP/1.1\r\n" +
@@ -47,6 +46,12 @@ namespace Chorizo.Tests.ProtocolHandler
                 "/",
                 "HTTP/1.1"
             );
+
+            _testGetResponse = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("fake", "header");
+
+            _mockResponseRetriever.Setup(rr => rr.Retrieve(It.IsAny<Request>()))
+                .Returns(_testGetResponse);
         }
 
         [Fact]
@@ -83,17 +88,11 @@ namespace Chorizo.Tests.ProtocolHandler
         }
 
         [Fact]
-        public void HandleRequestUsesResponseToWriteToTheSocket()
+        public void HandleRequestUsesResponseToSendOnTheSocket()
         {
-            var testGetResponse = new Response(
-                "HTTP/1.1",
-                200,
-                "OK",
-                new Dictionary<string, string>
-                {
-                    {"fake", "header"}
-                }
-            );
+            var testResponse = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("fake", "header");
+
             _mockSocketReader.Setup(sr => sr.ReadSocket(It.IsAny<IChorizoSocket>()))
                 .Returns(_testGetRequestBytes);
 
@@ -101,11 +100,14 @@ namespace Chorizo.Tests.ProtocolHandler
                 .Returns(_testGetRequest);
 
             _mockResponseRetriever.Setup(rr => rr.Retrieve(It.IsAny<Request>()))
-                .Returns(testGetResponse);
+                .Returns(testResponse);
 
             _testConnectionHandler.HandleRequest(_mockSocket.Object);
 
-            _mockResponseSender.Verify(rs => rs.Send(_mockSocket.Object, testGetResponse));
+            var testBytes = testResponse.ToByteArray();
+
+            _mockSocket.Verify(sock => sock.Send(testBytes));
+            _mockSocket.Verify(sock => sock.Disconnect(SocketShutdown.Both));
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Chorizo.Logger;
 using Chorizo.ProtocolHandler.DataParser;
 
