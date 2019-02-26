@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 using Chorizo.ProtocolHandler;
 using Chorizo.ProtocolHandler.DataParser;
+using Chorizo.ProtocolHandler.ResponseRetriever;
 using Chorizo.ProtocolHandler.SocketReader;
 using Chorizo.Sockets.CzoSocket;
 using Xunit;

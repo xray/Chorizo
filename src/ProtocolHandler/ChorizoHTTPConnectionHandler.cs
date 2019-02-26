@@ -1,33 +1,14 @@
-using System.Collections.Generic;
 using Chorizo.ProtocolHandler.DataParser;
+using Chorizo.ProtocolHandler.ResponseRetriever;
 using Chorizo.Sockets.CzoSocket;
 using Chorizo.ProtocolHandler.SocketReader;
 
 namespace Chorizo.ProtocolHandler{
-    public interface IResponseRetriever
-    {
-        Response Retrieve(Request req);
-    }
+
 
     public interface IResponseSender
     {
         byte[] Send(IChorizoSocket socket, Response res);
-    }
-
-    public struct Response
-    {
-        public readonly string Method;
-        public readonly int StatusCode;
-        public readonly string StatusText;
-        public readonly Dictionary<string, string> Headers;
-
-        public Response(string method, int statusCode, string statusText, Dictionary<string, string> headers)
-        {
-            Method = method;
-            StatusCode = statusCode;
-            StatusText = statusText;
-            Headers = headers;
-        }
     }
 
     public class ChorizoHttpConnectionHandler {
