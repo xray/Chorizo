@@ -10,10 +10,23 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
 
         public Response Retrieve(Request req)
         {
+            if (req.Path == "/simple_get")
+            {
+                 return new Response(
+                    "HTTP/1.1",
+                    200,
+                    "OK",
+                    new Dictionary<string, string>
+                    {
+                        {"Date", $"{DateTimeProvider.Now():R}"}
+                    }
+                 );
+            }
+
             return new Response(
                 "HTTP/1.1",
-                200,
-                "OK",
+                404,
+                "Not Found",
                 new Dictionary<string, string>
                 {
                     {"Date", $"{DateTimeProvider.Now():R}"}
