@@ -12,10 +12,10 @@ namespace Chorizo.ProtocolHandler.DataParser
         {
             var requestString = Encoding.UTF8.GetString(requestBytes);
             var requestLineInfo = GetRequestLineInfo(requestString);
-            var requestHeaders = GetRequestHeaders(requestString);
             var reqMethod = GetRequestMethod(requestLineInfo);
             var reqPath = GetRequestPath(requestLineInfo);
             var reqProtocol = GetRequestProtocol(requestLineInfo);
+            var requestHeaders = GetRequestHeaders(requestString);
             var request = new Request(reqMethod, reqPath, reqProtocol, requestHeaders);
             return request;
         }

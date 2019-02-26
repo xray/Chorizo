@@ -12,26 +12,12 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
         {
             if (req.Path == "/simple_get")
             {
-                 return new Response(
-                    "HTTP/1.1",
-                    200,
-                    "OK",
-                    new Dictionary<string, string>
-                    {
-                        {"Date", $"{DateTimeProvider.Now():R}"}
-                    }
-                 );
+                return new Response("HTTP/1.1", 200, "OK")
+                    .AddHeader("Date", $"{DateTimeProvider.Now():R}");
             }
 
-            return new Response(
-                "HTTP/1.1",
-                404,
-                "Not Found",
-                new Dictionary<string, string>
-                {
-                    {"Date", $"{DateTimeProvider.Now():R}"}
-                }
-            );
+            return new Response("HTTP/1.1", 404, "Not Found")
+                .AddHeader("Date", $"{DateTimeProvider.Now():R}");
         }
     }
 }

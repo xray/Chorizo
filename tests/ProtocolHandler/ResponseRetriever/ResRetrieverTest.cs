@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Chorizo.Logger;
 using Chorizo.ProtocolHandler.DataParser;
 using Chorizo.ProtocolHandler.ResponseRetriever;
@@ -27,15 +26,8 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
                 "HTTP/1.1"
             );
 
-            var testResponse = new Response(
-                "HTTP/1.1",
-                200,
-                "OK",
-                new Dictionary<string, string>
-                {
-                    {"Date", "Tue, 02 Dec 1997 15:10:00 GMT"}
-                }
-            );
+            var testResponse = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
             var testResponseRetriever = new ResRetriever
             {
@@ -44,7 +36,10 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
 
             var result = testResponseRetriever.Retrieve(testRequest);
 
-            Assert.True(result.Equals(testResponse));
+            Assert.Equal(testResponse.Protocol(), result.Protocol());
+            Assert.Equal(testResponse.StatusCode(), result.StatusCode());
+            Assert.Equal(testResponse.StatusText(), result.StatusText());
+            Assert.Equal(testResponse.Headers(), result.Headers());
         }
 
         [Fact]
@@ -56,15 +51,8 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
                 "HTTP/1.1"
             );
 
-            var testResponse = new Response(
-                "HTTP/1.1",
-                404,
-                "Not Found",
-                new Dictionary<string, string>
-                {
-                    {"Date", "Tue, 02 Dec 1997 15:10:00 GMT"}
-                }
-            );
+            var testResponse = new Response("HTTP/1.1", 404, "Not Found")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
             var testResponseRetriever = new ResRetriever
             {
@@ -73,7 +61,10 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
 
             var result = testResponseRetriever.Retrieve(testRequest);
 
-            Assert.True(result.Equals(testResponse));
+            Assert.Equal(testResponse.Protocol(), result.Protocol());
+            Assert.Equal(testResponse.StatusCode(), result.StatusCode());
+            Assert.Equal(testResponse.StatusText(), result.StatusText());
+            Assert.Equal(testResponse.Headers(), result.Headers());
         }
     }
 }

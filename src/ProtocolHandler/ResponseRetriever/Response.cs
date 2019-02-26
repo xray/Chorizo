@@ -1,43 +1,56 @@
-using System.Collections.Generic;
+using System;
 
 namespace Chorizo.ProtocolHandler.ResponseRetriever
 {
-public struct Response
+    public struct Response
     {
-        public readonly string Protocol;
-        public readonly int StatusCode;
-        public readonly string StatusText;
-        public readonly Dictionary<string, string> Headers;
+        private readonly string _protocol;
+        private readonly int _statusCode;
+        private readonly string _statusText;
+        private readonly Header[] _headers;
 
-        public Response(string protocol, int statusCode, string statusText, Dictionary<string, string> headers)
+        public Response(string protocol, int statusCode, string statusText)
         {
-            Protocol = protocol;
-            StatusCode = statusCode;
-            StatusText = statusText;
-            Headers = headers;
+            _protocol = protocol;
+            _statusCode = statusCode;
+            _statusText = statusText;
+            _headers = new Header[0];
         }
 
-        public bool Equals(Response other)
+        private Response(string protocol, int statusCode, string statusText, Header[] headers)
         {
-             var requestLineValuesEqual =
-                 Protocol == other.Protocol &&
-                 StatusCode== other.StatusCode &&
-                 StatusText == other.StatusText;
-             if (!requestLineValuesEqual) return false;
+            _protocol = protocol;
+            _statusCode = statusCode;
+            _statusText = statusText;
+            _headers = headers;
+        }
 
-             foreach (var (key, value) in Headers)
-             {
-                 if (!other.Headers.ContainsKey(key)) return false;
-                 if (other.Headers[key] != value) return false;
-             }
+        public string Protocol()
+        {
+            return _protocol;
+        }
 
-             foreach (var (key, value) in other.Headers)
-             {
-                 if (!Headers.ContainsKey(key)) return false;
-                 if (Headers[key] != value) return false;
-             }
+        public int StatusCode()
+        {
+            return _statusCode;
+        }
 
-             return true;
+        public string StatusText()
+        {
+            return _statusText;
+        }
+
+        public Header[] Headers()
+        {
+            return _headers;
+        }
+
+        public Response AddHeader(string name, string value)
+        {
+            var newHeaders = new Header[_headers.Length + 1];
+            Array.Copy(_headers, newHeaders, _headers.Length);
+            newHeaders[_headers.Length] = new Header(name, value);
+            return new Response(_protocol, _statusCode, _statusText, newHeaders);
         }
     }
 }
