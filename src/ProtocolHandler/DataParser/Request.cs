@@ -1,51 +1,76 @@
-using System;
-using System.Collections.Generic;
+using System.Text;
+using Chorizo.ProtocolHandler.ResponseRetriever;
 
 namespace Chorizo.ProtocolHandler.DataParser
 {
-    public struct Request:IEquatable<Request>
+    public struct Request
     {
-        public readonly string Method;
-        public readonly string Path;
-        public readonly string Protocol;
-        public readonly Dictionary<string, string> Headers;
+        private readonly string _method;
+        private readonly string _path;
+        private readonly string _protocol;
+        private readonly Headers _headers;
 
         public Request(string method, string path, string protocol)
         {
-            Method = method;
-            Path = path;
-            Protocol = protocol;
-            Headers = new Dictionary<string, string>();
+            _method = method;
+            _path = path;
+            _protocol = protocol;
+            _headers = new Headers();
         }
 
-        public Request(string method, string path, string protocol, Dictionary<string, string> headers)
+        public Request(string method, string path, string protocol, Headers headers)
         {
-            Method = method;
-            Path = path;
-            Protocol = protocol;
-            Headers = headers;
+            _method = method;
+            _path = path;
+            _protocol = protocol;
+            _headers = headers;
+        }
+
+        public string Method()
+        {
+            return _method;
+        }
+
+        public string Path()
+        {
+            return _path;
+        }
+
+        public string Protocol()
+        {
+            return _protocol;
+        }
+
+        public bool ContainsHeader(string name)
+        {
+            return _headers.ContainsHeader(name);
+        }
+
+        public Header GetHeader(string name)
+        {
+            return _headers.GetHeader(name);
+        }
+
+        public override string ToString()
+        {
+            var requestString = "";
+            requestString += $"{Method()} {Path()} {Protocol()}\r\n";
+            requestString += _headers.ToString();
+            requestString += "\r\n";
+            return requestString;
+        }
+
+        public byte[] ToByteArray()
+        {
+            return Encoding.UTF8.GetBytes(ToString());
         }
 
         public bool Equals(Request other)
         {
-             var requestLineValuesEqual = Method == other.Method &&
-                   Path == other.Path &&
-                   Protocol == other.Protocol;
-             if (!requestLineValuesEqual) return false;
-
-             foreach (var (key, value) in Headers)
-             {
-                 if (!other.Headers.ContainsKey(key)) return false;
-                 if (other.Headers[key] != value) return false;
-             }
-
-             foreach (var (key, value) in other.Headers)
-             {
-                 if (!Headers.ContainsKey(key)) return false;
-                 if (Headers[key] != value) return false;
-             }
-
-             return true;
+            return Method() == other.Method() &&
+                   Path() == other.Path() &&
+                   Protocol() == other.Protocol() &&
+                   _headers.Equals(other._headers);
         }
     }
 }

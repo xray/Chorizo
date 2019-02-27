@@ -29,17 +29,11 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
             var testResponse = new Response("HTTP/1.1", 200, "OK")
                 .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
-            var testResponseRetriever = new ResRetriever
-            {
-                DateTimeProvider = _mockDateTime.Object
-            };
+            var testResponseRetriever = new ResRetriever(_mockDateTime.Object);
 
             var result = testResponseRetriever.Retrieve(testRequest);
 
-            Assert.Equal(testResponse.Protocol(), result.Protocol());
-            Assert.Equal(testResponse.StatusCode(), result.StatusCode());
-            Assert.Equal(testResponse.StatusText(), result.StatusText());
-            Assert.Equal(testResponse.Headers(), result.Headers());
+            Assert.True(testResponse.Equals(result));
         }
 
         [Fact]
@@ -54,17 +48,11 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
             var testResponse = new Response("HTTP/1.1", 404, "Not Found")
                 .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
-            var testResponseRetriever = new ResRetriever
-            {
-                DateTimeProvider = _mockDateTime.Object
-            };
+            var testResponseRetriever = new ResRetriever(_mockDateTime.Object);
 
             var result = testResponseRetriever.Retrieve(testRequest);
 
-            Assert.Equal(testResponse.Protocol(), result.Protocol());
-            Assert.Equal(testResponse.StatusCode(), result.StatusCode());
-            Assert.Equal(testResponse.StatusText(), result.StatusText());
-            Assert.Equal(testResponse.Headers(), result.Headers());
+            Assert.True(testResponse.Equals(result));
         }
     }
 }

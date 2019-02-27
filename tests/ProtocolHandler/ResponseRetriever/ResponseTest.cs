@@ -9,15 +9,15 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
         public void AddHeaderTakesInAHeaderAndReturnsANewResponseWithTheOriginalResponseDataPlusTheAdditionalHeader()
         {
             var testResponse = new Response("HTTP/1.1", 200, "OK");
-            var testHeaderArray = new[] { new Header("Date", "Tue, 02 Dec 1997 15:10:00 GMT") };
+            var testHeader = new Header("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
             var resultResponse = testResponse.AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
             Assert.Equal("HTTP/1.1", resultResponse.Protocol());
             Assert.Equal(200, resultResponse.StatusCode());
             Assert.Equal("OK", resultResponse.StatusText());
-            Assert.True(resultResponse.Headers().Length == 1);
-            Assert.Equal(testHeaderArray, resultResponse.Headers());
+            Assert.True(resultResponse.ContainsHeader("Date"));
+            Assert.Equal(testHeader, resultResponse.GetHeader("Date"));
         }
 
         [Fact]

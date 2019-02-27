@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
+using Chorizo.ProtocolHandler.ResponseRetriever;
 
 namespace Chorizo.ProtocolHandler.DataParser
 {
@@ -26,17 +26,18 @@ namespace Chorizo.ProtocolHandler.DataParser
             return requestLine.Split(" ");
         }
 
-        private static Dictionary<string, string> GetRequestHeaders(string requestString)
+        private static Headers GetRequestHeaders(string requestString)
         {
-            var headers = new Dictionary<string, string>();
+            var headers = new Headers();
             var requestLines = requestString.Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
             var headerLines = requestLines.Skip(1);
+            Console.WriteLine($"this: {requestString}");
             foreach (var headerString in headerLines)
             {
                 var headerKeyAndValue = headerString.Split(": ");
-                var key = headerKeyAndValue[0].ToUpper();
+                var name = headerKeyAndValue[0];
                 var value = headerKeyAndValue[1];
-                headers.Add(key, value);
+                headers = headers.AddHeader(name, value);
             }
 
             return headers;

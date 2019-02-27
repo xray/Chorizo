@@ -7,7 +7,6 @@ using Chorizo.ProtocolHandler.SocketReader;
 using Chorizo.Sockets.CzoSocket;
 using Xunit;
 using Moq;
-using Xunit.Abstractions;
 
 namespace Chorizo.Tests.ProtocolHandler
 {

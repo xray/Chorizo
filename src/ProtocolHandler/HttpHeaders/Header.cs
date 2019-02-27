@@ -1,3 +1,5 @@
+using System;
+
 namespace Chorizo.ProtocolHandler.ResponseRetriever
 {
     public struct Header
@@ -21,14 +23,15 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
             return _value;
         }
 
-        public bool Equals(Header other)
-        {
-            return _name.Equals(other.Name()) && _value.Equals(other.Value());
-        }
-
         public override string ToString()
         {
             return $"{_name}: {_value}\r\n";
         }
-    }
+
+        public bool Equals(Header other)
+        {
+            return string.Equals(Name(), other.Name(), StringComparison.CurrentCultureIgnoreCase) &&
+                   Value() == other.Value();
+        }
+   }
 }

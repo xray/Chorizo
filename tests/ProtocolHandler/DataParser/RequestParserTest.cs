@@ -1,12 +1,21 @@
-using System.Collections.Generic;
+using System;
 using System.Text;
 using Chorizo.ProtocolHandler.DataParser;
+using Chorizo.ProtocolHandler.ResponseRetriever;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Chorizo.Tests.ProtocolHandler.DataParser
 {
     public class RequestParserTest
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public RequestParserTest(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public void ParseTakesInBytesOfARequestWithNoHeadersAndReturnsARequest()
         {
@@ -38,10 +47,7 @@ namespace Chorizo.Tests.ProtocolHandler.DataParser
                 "GET",
                 "/",
                 "HTTP/1.1",
-                new Dictionary<string, string>
-                {
-                    {"FOO", "bar"}
-                }
+                new Headers().AddHeader("foo", "bar")
             );
 
 
@@ -49,7 +55,7 @@ namespace Chorizo.Tests.ProtocolHandler.DataParser
             var result = testDataParser.Parse(testGetRequestBytes);
 
 
-            Assert.True(result.Equals(testRequest));
+            Assert.True(testRequest.Equals(result));
         }
     }
 }
