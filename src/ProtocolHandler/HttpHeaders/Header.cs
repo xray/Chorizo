@@ -1,6 +1,6 @@
 using System;
 
-namespace Chorizo.ProtocolHandler.ResponseRetriever
+namespace Chorizo.ProtocolHandler.HttpHeaders
 {
     public struct Header
     {

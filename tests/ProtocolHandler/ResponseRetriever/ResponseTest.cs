@@ -1,3 +1,4 @@
+using Chorizo.ProtocolHandler.HttpHeaders;
 using Chorizo.ProtocolHandler.ResponseRetriever;
 using Xunit;
 
@@ -6,7 +7,7 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
     public class ResponseTest
     {
         [Fact]
-        public void AddHeaderTakesInAHeaderAndReturnsANewResponseWithTheOriginalResponseDataPlusTheAdditionalHeader()
+        public void AddHeaderTakesInANameAndValueAndReturnsANewResponseWithTheOriginalResponseDataPlusTheAdditionalHeader()
         {
             var testResponse = new Response("HTTP/1.1", 200, "OK");
             var testHeader = new Header("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
@@ -26,11 +27,33 @@ namespace Chorizo.Tests.ProtocolHandler.ResponseRetriever
             var testResponse = new Response("HTTP/1.1", 200, "OK")
                 .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
-            var expectedString = "HTTP/1.1 200 OK\r\n" +
-                                 "Date: Tue, 02 Dec 1997 15:10:00 GMT\r\n" +
-                                 "\r\n";
+            const string expectedString = "HTTP/1.1 200 OK\r\n" +
+                                          "Date: Tue, 02 Dec 1997 15:10:00 GMT\r\n" +
+                                          "\r\n";
 
             Assert.Equal(expectedString, testResponse.ToString());
+        }
+
+        [Fact]
+        public void EqualsTakesInASecondaryResponseAndReturnsTrueWhenTheyContainTheSameInformation()
+        {
+            var testResponse = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("test", "header");
+            var testResponseToCompare = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("test", "header");
+
+            Assert.True(testResponse.Equals(testResponseToCompare));
+        }
+
+        [Fact]
+        public void EqualsTakesInASecondaryResponseAndReturnsFalseWhenTheyContainDifferentInformation()
+        {
+            var testResponse = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("test", "header");
+            var testResponseToCompare = new Response("HTTP/1.1", 404, "Not Found")
+                .AddHeader("test", "different");
+
+            Assert.False(testResponse.Equals(testResponseToCompare));
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Text;
+using Chorizo.ProtocolHandler.HttpHeaders;
 
 namespace Chorizo.ProtocolHandler.ResponseRetriever
 {
@@ -59,7 +60,7 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
         public override string ToString()
         {
             var outputString = "";
-            outputString += $"{_protocol} {_statusCode} {_statusText}\r\n";
+            outputString += $"{Protocol()} {StatusCode()} {StatusText()}\r\n";
             outputString += _headers.ToString();
             outputString += "\r\n";
             return outputString;
@@ -68,6 +69,14 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
         public byte[] ToByteArray()
         {
             return Encoding.UTF8.GetBytes(ToString());
+        }
+
+        public bool Equals(Response other)
+        {
+            return Protocol() == other.Protocol() &&
+                   StatusCode() == other.StatusCode() &&
+                   StatusText() == other.StatusText() &&
+                   _headers.Equals(other._headers);
         }
     }
 }

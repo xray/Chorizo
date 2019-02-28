@@ -1,4 +1,3 @@
-using System;
 using System.Net.Sockets;
 using Chorizo.ProtocolHandler.DataParser;
 using Chorizo.ProtocolHandler.ResponseRetriever;

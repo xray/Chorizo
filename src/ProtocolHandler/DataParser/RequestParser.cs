@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Chorizo.ProtocolHandler.HttpHeaders;
 using Chorizo.ProtocolHandler.ResponseRetriever;
 
 namespace Chorizo.ProtocolHandler.DataParser

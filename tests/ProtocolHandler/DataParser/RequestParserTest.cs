@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Chorizo.ProtocolHandler.DataParser;
+using Chorizo.ProtocolHandler.HttpHeaders;
 using Chorizo.ProtocolHandler.ResponseRetriever;
 using Xunit;
 using Xunit.Abstractions;

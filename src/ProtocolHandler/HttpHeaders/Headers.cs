@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 
-namespace Chorizo.ProtocolHandler.ResponseRetriever
+namespace Chorizo.ProtocolHandler.HttpHeaders
 {
     public class Headers
     {
@@ -19,17 +18,26 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
             _headers = newHeaders;
         }
 
-        public Headers AddHeader(string name, string value)
-        {
-            var newHeaders = new Header[_headers.Length + 1];
-            Array.Copy(_headers, newHeaders, _headers.Length);
-            newHeaders[_headers.Length] = new Header(name, value);
-            return new Headers(newHeaders);
-        }
-
         public bool ContainsHeader(string name)
         {
             return _headers.Any(header => string.Equals(header.Name(), name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public Headers AddHeader(string name, string value)
+        {
+            Header[] newHeaders;
+            if (ContainsHeader(name))
+            {
+                newHeaders = ReplaceHeader(name, value);
+            }
+            else
+            {
+                newHeaders = new Header[_headers.Length + 1];
+                Array.Copy(_headers, newHeaders, _headers.Length);
+                newHeaders[_headers.Length] = new Header(name, value);
+            }
+
+            return new Headers(newHeaders);
         }
 
         public Header GetHeader(string name)
@@ -57,6 +65,27 @@ namespace Chorizo.ProtocolHandler.ResponseRetriever
             }
 
             return true;
+        }
+
+        private Header[] ReplaceHeader(string name, string value)
+        {
+            var updatedHeaders = new Header[_headers.Length];
+            var currentLocation = 0;
+            foreach (var header in _headers)
+            {
+                if (header.Name().Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    updatedHeaders[currentLocation] = new Header(name, value);
+                }
+                else
+                {
+                    updatedHeaders[currentLocation] = new Header(header.Name(), header.Value());
+                }
+
+                currentLocation++;
+            }
+
+            return updatedHeaders;
         }
     }
 }

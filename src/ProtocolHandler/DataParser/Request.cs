@@ -1,5 +1,5 @@
 using System.Text;
-using Chorizo.ProtocolHandler.ResponseRetriever;
+using Chorizo.ProtocolHandler.HttpHeaders;
 
 namespace Chorizo.ProtocolHandler.DataParser
 {
