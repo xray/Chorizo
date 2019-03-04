@@ -6,8 +6,8 @@ namespace Chipotle
     {
         static void Main()
         {
-            var port = 8000;
-            var server = new Chorizo.Chorizo(port, "TelNet");
+            var port = 5000;
+            var server = new Chorizo.Chorizo(port);
             Console.WriteLine($"Starting to listen on port {port}");
             server.Start();
         }

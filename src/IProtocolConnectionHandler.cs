@@ -1,8 +1,8 @@
 using Chorizo.Sockets.CzoSocket;
 
-namespace Chorizo.ProtocolHandler
+namespace Chorizo
 {
-    public interface IChorizoProtocolConnectionHandler
+    public interface IProtocolConnectionHandler
     {
         void HandleRequest(IChorizoSocket chorizoSocket);
     }

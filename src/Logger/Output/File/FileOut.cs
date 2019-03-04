@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using Chorizo.Date;
 
 namespace Chorizo.Logger.Output.File
 {

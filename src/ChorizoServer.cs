@@ -1,6 +1,10 @@
+using Chorizo.Date;
+using Chorizo.HTTP;
+using Chorizo.HTTP.DataParser;
+using Chorizo.HTTP.ReqProcessor;
+using Chorizo.HTTP.SocketReader;
 using Chorizo.Logger;
 using Chorizo.Logger.Configuration;
-using Chorizo.ProtocolHandler;
 using Chorizo.ServerConfiguration;
 using Chorizo.SocketMachine;
 
@@ -10,7 +14,7 @@ namespace Chorizo
     {
         private IServerStatus Status { get; }
         private ISocketMachine SocketMachine { get; }
-        private IChorizoProtocolConnectionHandler ProtocolConnectionHandler { get; }
+        private IProtocolConnectionHandler ProtocolConnectionHandler { get; }
         private IMiniLogger Logger { get; }
         private ServerConfig Config { get; }
 
@@ -19,7 +23,7 @@ namespace Chorizo
             string mode = Constants.ServerMode,
             IServerStatus serverStatus = null,
             ISocketMachine socketMachine = null,
-            IChorizoProtocolConnectionHandler protocolConnectionHandler = null,
+            IProtocolConnectionHandler protocolConnectionHandler = null,
             IMiniLogger logger = null
         )
         {
@@ -27,7 +31,13 @@ namespace Chorizo
             Logger = logger ?? new MiniLogger(new LogConfig(Config.Mode));
             Status = serverStatus ?? new ServerStatus();
             SocketMachine = socketMachine ?? new DotNetSocketMachine();
-            ProtocolConnectionHandler = protocolConnectionHandler ?? new ChorizoEchoConnectionHandler(Logger);
+            ProtocolConnectionHandler = protocolConnectionHandler ?? new HttpConnectionHandler
+            {
+                SocketReader = new SocketReader(),
+                DataParser = new RequestParser(),
+                RequestProcessor = new RequestProcessor(new DateTimeProvider())
+
+            };
             SocketMachine.Configure(Config.Port, Config.HostName);
         }
 

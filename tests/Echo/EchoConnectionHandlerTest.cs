@@ -1,18 +1,18 @@
 using System;
 using System.Net.Sockets;
-using Chorizo.ProtocolHandler;
+using Chorizo.Echo;
 using Chorizo.Sockets.CzoSocket;
 using Moq;
 using Xunit;
 
-namespace Chorizo.Tests.ProtocolHandler
+namespace Chorizo.Tests.Echo
 {
-    public class ChorizoEchoConnectionHandlerTest
+    public class EchoConnectionHandlerTest
     {
         [Fact]
         public void HandleEchosTheDataSentFromTheClientBackToItself()
         {
-            var testHandler = new ChorizoEchoConnectionHandler();
+            var testHandler = new EchoConnectionHandler();
             var testNums = new byte[] {70, 79, 79, 10};
             var mockCzoSocket = new Mock<IChorizoSocket>();
             mockCzoSocket.SetupSequence(sock => sock.Receive(It.IsAny<int>()))

@@ -189,3 +189,6 @@ docsrc/tools/FSharp.Formatting.svc
 
 # Chorizo Logs
 logs/
+
+# Notes
+NotesForPairing.md

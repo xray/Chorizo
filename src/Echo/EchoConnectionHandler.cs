@@ -4,12 +4,12 @@ using System.Text;
 using Chorizo.Logger;
 using Chorizo.Sockets.CzoSocket;
 
-namespace Chorizo.ProtocolHandler
+namespace Chorizo.Echo
 {
-    public class ChorizoEchoConnectionHandler : IChorizoProtocolConnectionHandler
+    public class EchoConnectionHandler : IProtocolConnectionHandler
     {
         private readonly IMiniLogger _optionalLogger;
-        public ChorizoEchoConnectionHandler(IMiniLogger optionalLogger = null)
+        public EchoConnectionHandler(IMiniLogger optionalLogger = null)
         {
             _optionalLogger = optionalLogger;
         }
