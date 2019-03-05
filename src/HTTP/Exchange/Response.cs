@@ -16,7 +16,7 @@ namespace Chorizo.HTTP.Exchange
             StatusCode = statusCode;
             StatusText = statusText;
             _headers = new Headers();
-            Body = null;
+            Body = "";
         }
 
         public Response(string protocol, int statusCode, string statusText, string body)
@@ -60,7 +60,7 @@ namespace Chorizo.HTTP.Exchange
             outputString += $"{Protocol} {StatusCode} {StatusText}\r\n";
             outputString += _headers.ToString();
             outputString += "\r\n";
-            outputString += Body ?? "";
+            outputString += Body;
             return outputString;
         }
 

@@ -33,7 +33,7 @@ namespace Chorizo
             SocketMachine = socketMachine ?? new DotNetSocketMachine();
             ProtocolConnectionHandler = protocolConnectionHandler ?? new HttpConnectionHandler
             {
-                SocketReader = new SocketReader(),
+                SocketReader = new InternalSocketReader(),
                 DataParser = new RequestParser(),
                 RequestProcessor = new RequestProcessor(new DateTimeProvider())
 

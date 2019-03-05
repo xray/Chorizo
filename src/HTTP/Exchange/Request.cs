@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 
 namespace Chorizo.HTTP.Exchange
@@ -43,6 +44,15 @@ namespace Chorizo.HTTP.Exchange
             Path = path;
             Protocol = protocol;
             _headers = headers;
+            Body = body;
+        }
+
+        public Request(Request req, string body)
+        {
+            Method = req.Method;
+            Path = req.Path;
+            Protocol = req.Protocol;
+            _headers = req._headers;
             Body = body;
         }
 

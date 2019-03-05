@@ -1,5 +1,7 @@
+using System;
 using Chorizo.HTTP.Exchange;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Chorizo.Tests.HTTP.Exchange
 {
@@ -42,13 +44,13 @@ namespace Chorizo.Tests.HTTP.Exchange
             var testResponse = new Response("HTTP/1.1", 200, "OK", $"{body}")
                 .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
-            var expectedString = "HTTP/1.1 200 OK\r\n" +
-                                 "Date: Tue, 02 Dec 1997 15:10:00 GMT\r\n" +
-                                 $"Content-Length: {contentLength}\r\n" +
-                                 "\r\n" +
-                                 $"{body}";
+            var assertableList = testResponse.ToString().Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
 
-            Assert.Equal(expectedString, testResponse.ToString());
+            Assert.Equal("HTTP/1.1 200 OK", assertableList[0]);
+
+            Assert.Contains("Date: Tue, 02 Dec 1997 15:10:00 GMT\r\n", testResponse.ToString());
+            Assert.Contains($"Content-Length: {contentLength}\r\n", testResponse.ToString());
+            Assert.Equal($"{body}", assertableList[3]);
         }
 
         [Fact]

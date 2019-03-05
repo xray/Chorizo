@@ -78,6 +78,8 @@ namespace Chorizo.Tests.HTTP
         {
             _mockSocketReader.Setup(sr => sr.ReadSocket(It.IsAny<IChorizoSocket>()))
                 .Returns(_testGetRequestBytes);
+            _mockSocketReader.Setup(sr => sr.ReadBody(It.IsAny<IChorizoSocket>(), It.IsAny<Request>()))
+                .Returns(_testGetRequest);
 
             _mockDataParser.Setup(dp => dp.Parse(It.IsAny<byte[]>()))
                 .Returns(_testGetRequest);
