@@ -18,7 +18,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
         }
 
         [Fact]
-        public void ProcessTakesARequestForForwardSlashSimpleGetAndReturnsAResponseOfTwoHundredOK()
+        public void ProcessTakesAGetRequestForForwardSlashSimpleGetAndReturnsAResponseOfTwoHundredOK()
         {
             var testRequest = new Request(
                 "GET",
@@ -37,7 +37,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
         }
 
         [Fact]
-        public void ProcessTakesARequestForAPathOtherThanSimpleGetAndThenReturnsAResponseOfFourOFour()
+        public void ProcessTakesARequestForAnyUndefinedPath()
         {
             var testRequest = new Request(
                 "GET",
@@ -56,7 +56,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
         }
 
         [Fact]
-        public void ProcessTakesARequestForForwardSlashEchoBodyAndReturnsAResponseOf200WithABodyEqualToTheBodyOfTheRequest()
+        public void ProcessTakesAPostRequestForForwardSlashEchoBodyAndReturnsAResponseOf200WithABodyEqualToTheBodyOfTheRequest()
         {
             var testRequest = new Request(
                 "POST",
@@ -67,6 +67,110 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testResponse = new Response("HTTP/1.1", 200, "OK", "some body")
                 .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
+
+            var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
+
+            var result = testRequestProcessor.Process(testRequest);
+
+            Assert.True(testResponse.Equals(result));
+        }
+
+        [Fact]
+        public void
+            ProcessTakesAOptionsRequestForForwardSlashMethodOptionsAndReturnsAResponseWithAnAllowHeaderThatContainsGetHeadAndOptions()
+        {
+            var testRequest = new Request(
+                "OPTIONS",
+                "/method_options",
+                "HTTP/1.1"
+            );
+
+            var testResponse = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT")
+                .AddHeader("Allow", "GET,HEAD,OPTIONS");
+
+            var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
+
+            var result = testRequestProcessor.Process(testRequest);
+
+            Assert.True(testResponse.Equals(result));
+        }
+
+        [Fact]
+        public void
+            ProcessTakesAOptionsRequestForForwardSlashMethodOptions2AndReturnsAResponseWithAnAllowHeaderThatContainsGetHeadAndOptions()
+        {
+            var testRequest = new Request(
+                "OPTIONS",
+                "/method_options2",
+                "HTTP/1.1"
+            );
+
+            var testResponse = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT")
+                .AddHeader("Allow", "GET,HEAD,OPTIONS,PUT,POST");
+
+            var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
+
+            var result = testRequestProcessor.Process(testRequest);
+
+            Assert.True(testResponse.Equals(result));
+        }
+
+        [Fact]
+        public void
+            ProcessTakesAGetRequestForForwardSlashRedirectAndReturnsAResponseWithALocationHeaderThatContainsTheURIForSimpleGet()
+        {
+            var testRequest = new Request(
+                "GET",
+                "/redirect",
+                "HTTP/1.1"
+            );
+
+            var testResponse = new Response("HTTP/1.1", 301, "Moved Permanently")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT")
+                .AddHeader("Location", "http://localhost:5000/simple_get");
+
+            var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
+
+            var result = testRequestProcessor.Process(testRequest);
+
+            Assert.True(testResponse.Equals(result));
+        }
+
+        [Fact]
+        public void
+            ProcessTakesAHeadRequestForForwardSlashGetWithBodyAndReturnsA200OkResponse()
+        {
+            var testRequest = new Request(
+                "HEAD",
+                "/get_with_body",
+                "HTTP/1.1"
+            );
+
+            var testResponse = new Response("HTTP/1.1", 200, "OK")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
+
+            var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
+
+            var result = testRequestProcessor.Process(testRequest);
+
+            Assert.True(testResponse.Equals(result));
+        }
+
+        [Fact]
+        public void
+            ProcessTakesARequestForAnyOtherMethodBesidesHeadForForwardSlashGetWithBodyAndReturnsA405MethodNotAllowedResponse()
+        {
+            var testRequest = new Request(
+                "GET",
+                "/get_with_body",
+                "HTTP/1.1"
+            );
+
+            var testResponse = new Response("HTTP/1.1", 405, "Method Not Allowed")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT")
+                .AddHeader("Allow", "HEAD,OPTIONS");
 
             var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
 

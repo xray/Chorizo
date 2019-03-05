@@ -26,6 +26,27 @@ namespace Chorizo.HTTP.ReqProcessor
                     return new Response("HTTP/1.1", 200, "OK", req.Body)
                         .AddHeader("Date", _currentTime);
                 }
+                case "/method_options":
+                    return new Response("HTTP/1.1", 200, "OK")
+                        .AddHeader("Date", _currentTime)
+                        .AddHeader("Allow", "GET,HEAD,OPTIONS");
+                case "/method_options2":
+                    return new Response("HTTP/1.1", 200, "OK")
+                        .AddHeader("Date", _currentTime)
+                        .AddHeader("Allow", "GET,HEAD,OPTIONS,PUT,POST");
+                case "/redirect":
+                    return new Response("HTTP/1.1", 301, "Moved Permanently")
+                        .AddHeader("Date", _currentTime)
+                        .AddHeader("Location", "http://localhost:5000/simple_get");
+                case "/get_with_body":
+                    if (req.Method == "HEAD")
+                    {
+                        return new Response("HTTP/1.1", 200, "OK")
+                            .AddHeader("Date", _currentTime);
+                    }
+                    return new Response("HTTP/1.1", 405, "Method Not Allowed")
+                        .AddHeader("Date", _currentTime)
+                        .AddHeader("Allow", "HEAD,OPTIONS");
                 default:
                 {
                     return new Response("HTTP/1.1", 404, "Not Found")
