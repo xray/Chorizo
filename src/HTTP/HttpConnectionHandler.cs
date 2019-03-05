@@ -14,7 +14,7 @@ namespace Chorizo.HTTP {
         public void HandleRequest(IChorizoSocket socket) {
             var bytes = SocketReader.ReadSocket(socket);
             var request = DataParser.Parse(bytes);
-            var response = RequestProcessor.Retrieve(request);
+            var response = RequestProcessor.Process(request);
             socket.Send(response.ToByteArray());
             socket.Disconnect(SocketShutdown.Both);
         }

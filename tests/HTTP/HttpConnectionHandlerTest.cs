@@ -50,7 +50,7 @@ namespace Chorizo.Tests.HTTP
             _testGetResponse = new Response("HTTP/1.1", 200, "OK")
                 .AddHeader("fake", "header");
 
-            _mockResponseRetriever.Setup(rr => rr.Retrieve(It.IsAny<Request>()))
+            _mockResponseRetriever.Setup(rr => rr.Process(It.IsAny<Request>()))
                 .Returns(_testGetResponse);
         }
 
@@ -84,7 +84,7 @@ namespace Chorizo.Tests.HTTP
 
             _testConnectionHandler.HandleRequest(_mockSocket.Object);
 
-            _mockResponseRetriever.Verify(rr => rr.Retrieve(_testGetRequest));
+            _mockResponseRetriever.Verify(rr => rr.Process(_testGetRequest));
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace Chorizo.Tests.HTTP
             _mockDataParser.Setup(dp => dp.Parse(It.IsAny<byte[]>()))
                 .Returns(_testGetRequest);
 
-            _mockResponseRetriever.Setup(rr => rr.Retrieve(It.IsAny<Request>()))
+            _mockResponseRetriever.Setup(rr => rr.Process(It.IsAny<Request>()))
                 .Returns(testResponse);
 
             _testConnectionHandler.HandleRequest(_mockSocket.Object);

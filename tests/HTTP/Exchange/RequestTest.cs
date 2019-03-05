@@ -10,11 +10,12 @@ namespace Chorizo.Tests.HTTP.Exchange
         {
             var testHeaders = new Headers()
                 .AddHeader("test", "header");
-            var testRequest = new Request("GET", "/", "HTTP/1.1", testHeaders);
+            var testRequest = new Request("GET", "/", "HTTP/1.1", testHeaders, "test body");
 
             const string expectedString = "GET / HTTP/1.1\r\n" +
                                           "test: header\r\n" +
-                                          "\r\n";
+                                          "\r\n" +
+                                          "test body";
 
             Assert.Equal(expectedString, testRequest.ToString());
         }
@@ -24,8 +25,8 @@ namespace Chorizo.Tests.HTTP.Exchange
         {
             var testHeaders = new Headers()
                 .AddHeader("test", "header");
-            var testRequest = new Request("GET", "/", "HTTP/1.1", testHeaders);
-            var testRequestToCompare = new Request("GET", "/", "HTTP/1.1", testHeaders);
+            var testRequest = new Request("GET", "/", "HTTP/1.1", testHeaders, "test body");
+            var testRequestToCompare = new Request("GET", "/", "HTTP/1.1", testHeaders, "test body");
 
             Assert.True(testRequest.Equals(testRequestToCompare));
         }

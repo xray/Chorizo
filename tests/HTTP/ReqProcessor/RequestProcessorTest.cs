@@ -18,7 +18,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
         }
 
         [Fact]
-        public void RetrieveTakesARequestForForwardSlashSimpleGetAndReturnsAResponseOfTwoHundredOK()
+        public void ProcessTakesARequestForForwardSlashSimpleGetAndReturnsAResponseOfTwoHundredOK()
         {
             var testRequest = new Request(
                 "GET",
@@ -31,13 +31,13 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testResponseRetriever = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testResponseRetriever.Retrieve(testRequest);
+            var result = testResponseRetriever.Process(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
 
         [Fact]
-        public void RetrieveTakesARequestForAPathOtherThanSimpleGetAndThenReturnsAResponseOfFourOFour()
+        public void ProcessTakesARequestForAPathOtherThanSimpleGetAndThenReturnsAResponseOfFourOFour()
         {
             var testRequest = new Request(
                 "GET",
@@ -50,7 +50,27 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testResponseRetriever = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testResponseRetriever.Retrieve(testRequest);
+            var result = testResponseRetriever.Process(testRequest);
+
+            Assert.True(testResponse.Equals(result));
+        }
+
+        [Fact]
+        public void ProcessTakesARequestForForwardSlashEchoBodyAndReturnsAResponseOf200WithABodyEqualToTheBodyOfTheRequest()
+        {
+            var testRequest = new Request(
+                "POST",
+                "/echo_body",
+                "HTTP/1.1",
+                "some body"
+            );
+
+            var testResponse = new Response("HTTP/1.1", 200, "OK", "some body")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
+
+            var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
+
+            var result = testRequestProcessor.Process(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }

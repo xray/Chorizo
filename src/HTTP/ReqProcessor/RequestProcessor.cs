@@ -12,16 +12,26 @@ namespace Chorizo.HTTP.ReqProcessor
             _currentTime = $"{dateTimeProvider.Now():R}";
         }
 
-        public Response Retrieve(Request req)
+        public Response Process(Request req)
         {
-            if (req.Path == "/simple_get")
+            switch (req.Path)
             {
-                return new Response("HTTP/1.1", 200, "OK")
-                    .AddHeader("Date", _currentTime);
+                case "/simple_get":
+                {
+                    return new Response("HTTP/1.1", 200, "OK")
+                        .AddHeader("Date", _currentTime);
+                }
+                case "/echo_body":
+                {
+                    return new Response("HTTP/1.1", 200, "OK", req.Body)
+                        .AddHeader("Date", _currentTime);
+                }
+                default:
+                {
+                    return new Response("HTTP/1.1", 404, "Not Found")
+                        .AddHeader("Date", _currentTime);
+                }
             }
-
-            return new Response("HTTP/1.1", 404, "Not Found")
-                .AddHeader("Date", _currentTime);
         }
     }
 }
