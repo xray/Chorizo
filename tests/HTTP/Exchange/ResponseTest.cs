@@ -1,5 +1,7 @@
+using System;
 using Chorizo.HTTP.Exchange;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Chorizo.Tests.HTTP.Exchange
 {
@@ -8,7 +10,7 @@ namespace Chorizo.Tests.HTTP.Exchange
         [Fact]
         public void AddHeaderTakesInANameAndValueAndReturnsANewResponseWithTheOriginalResponseDataPlusTheAdditionalHeader()
         {
-            var testResponse = new Response("HTTP/1.1", 200, "OK");
+            var testResponse = new Response("HTTP/1.1", 200, "OK", "test body");
             var testHeader = new Header("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
 
             var resultResponse = testResponse.AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
@@ -18,10 +20,11 @@ namespace Chorizo.Tests.HTTP.Exchange
             Assert.Equal("OK", resultResponse.StatusText);
             Assert.True(resultResponse.ContainsHeader("Date"));
             Assert.Equal(testHeader, resultResponse.GetHeader("Date"));
+            Assert.Equal("test body", resultResponse.Body);
         }
 
         [Fact]
-        public void ToStringUsesTheResponsesPropertiesToCreateAStringThatRepresentsTheResponse()
+        public void ToStringUsesTheResponsesPropertiesToCreateAStringThatRepresentsTheResponseWithoutBody()
         {
             var testResponse = new Response("HTTP/1.1", 200, "OK")
                 .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
@@ -33,12 +36,29 @@ namespace Chorizo.Tests.HTTP.Exchange
             Assert.Equal(expectedString, testResponse.ToString());
         }
 
+        [Theory]
+        [InlineData("test body", 9)]
+        [InlineData("<html><h1>Chorizo</h1></html>", 29)]
+        public void ToStringUsesTheResponsesPropertiesToCreateAStringThatRepresentsTheResponseWithBody(string body, int contentLength)
+        {
+            var testResponse = new Response("HTTP/1.1", 200, "OK", $"{body}")
+                .AddHeader("Date", "Tue, 02 Dec 1997 15:10:00 GMT");
+
+            var assertableList = testResponse.ToString().Split("\r\n", StringSplitOptions.RemoveEmptyEntries);
+
+            Assert.Equal("HTTP/1.1 200 OK", assertableList[0]);
+
+            Assert.Contains("Date: Tue, 02 Dec 1997 15:10:00 GMT\r\n", testResponse.ToString());
+            Assert.Contains($"Content-Length: {contentLength}\r\n", testResponse.ToString());
+            Assert.Equal($"{body}", assertableList[3]);
+        }
+
         [Fact]
         public void EqualsTakesInASecondaryResponseAndReturnsTrueWhenTheyContainTheSameInformation()
         {
-            var testResponse = new Response("HTTP/1.1", 200, "OK")
+            var testResponse = new Response("HTTP/1.1", 200, "OK", "test body")
                 .AddHeader("test", "header");
-            var testResponseToCompare = new Response("HTTP/1.1", 200, "OK")
+            var testResponseToCompare = new Response("HTTP/1.1", 200, "OK", "test body")
                 .AddHeader("test", "header");
 
             Assert.True(testResponse.Equals(testResponseToCompare));
@@ -49,8 +69,8 @@ namespace Chorizo.Tests.HTTP.Exchange
         {
             var testResponse = new Response("HTTP/1.1", 200, "OK")
                 .AddHeader("test", "header");
-            var testResponseToCompare = new Response("HTTP/1.1", 404, "Not Found")
-                .AddHeader("test", "different");
+            var testResponseToCompare = new Response("HTTP/1.1", 200, "OK", "test body")
+                .AddHeader("test", "header");
 
             Assert.False(testResponse.Equals(testResponseToCompare));
         }

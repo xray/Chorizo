@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 
 namespace Chorizo.HTTP.Exchange
@@ -7,7 +8,8 @@ namespace Chorizo.HTTP.Exchange
         public readonly string Method;
         public readonly string Path;
         public readonly string Protocol;
-        public readonly Headers _headers;
+        private readonly Headers _headers;
+        public readonly string Body;
 
         public Request(string method, string path, string protocol)
         {
@@ -15,6 +17,16 @@ namespace Chorizo.HTTP.Exchange
             Path = path;
             Protocol = protocol;
             _headers = new Headers();
+            Body = null;
+        }
+
+        public Request(string method, string path, string protocol, string body)
+        {
+            Method = method;
+            Path = path;
+            Protocol = protocol;
+            _headers = new Headers();
+            Body = body;
         }
 
         public Request(string method, string path, string protocol, Headers headers)
@@ -23,6 +35,25 @@ namespace Chorizo.HTTP.Exchange
             Path = path;
             Protocol = protocol;
             _headers = headers;
+            Body = null;
+        }
+
+        public Request(string method, string path, string protocol, Headers headers, string body)
+        {
+            Method = method;
+            Path = path;
+            Protocol = protocol;
+            _headers = headers;
+            Body = body;
+        }
+
+        public Request(Request req, string body)
+        {
+            Method = req.Method;
+            Path = req.Path;
+            Protocol = req.Protocol;
+            _headers = req._headers;
+            Body = body;
         }
 
         public bool ContainsHeader(string name)
@@ -41,6 +72,7 @@ namespace Chorizo.HTTP.Exchange
             requestString += $"{Method} {Path} {Protocol}\r\n";
             requestString += _headers.ToString();
             requestString += "\r\n";
+            requestString += Body ?? "";
             return requestString;
         }
 
@@ -54,7 +86,8 @@ namespace Chorizo.HTTP.Exchange
             return Method == other.Method &&
                    Path == other.Path &&
                    Protocol == other.Protocol &&
-                   _headers.Equals(other._headers);
+                   _headers.Equals(other._headers) &&
+                   Body == other.Body;
         }
     }
 }
