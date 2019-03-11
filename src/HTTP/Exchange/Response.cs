@@ -10,25 +10,6 @@ namespace Chorizo.HTTP.Exchange
         private readonly Headers _headers;
         public readonly string Body;
 
-        public Response(string protocol, int statusCode, string statusText)
-        {
-            Protocol = protocol;
-            StatusCode = statusCode;
-            StatusText = statusText;
-            _headers = new Headers();
-            Body = "";
-        }
-
-        public Response(string protocol, int statusCode, string statusText, string body)
-        {
-            Protocol = protocol;
-            StatusCode = statusCode;
-            StatusText = statusText;
-            Body = body;
-            _headers = new Headers()
-                .AddHeader("Content-Length", Encoding.UTF8.GetBytes(body).Length.ToString());
-        }
-
         private Response(string protocol, int statusCode, string statusText, Headers headers, string body)
         {
             Protocol = protocol;
@@ -37,6 +18,17 @@ namespace Chorizo.HTTP.Exchange
             _headers = headers;
             Body = body;
         }
+
+        public Response(string protocol, int statusCode, string statusText) : this(protocol, statusCode, statusText, new Headers(), ""){}
+
+        public Response(string protocol, int statusCode, string statusText, string body): this(
+            protocol,
+            statusCode,
+            statusText,
+            new Headers()
+                .AddHeader("Content-Length", Encoding.UTF8.GetBytes(body).Length.ToString()),
+            body
+        ){}
 
         public Response AddHeader(string name, string value)
         {
