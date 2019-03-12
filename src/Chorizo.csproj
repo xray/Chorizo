@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <PackageId>Chorizo</PackageId>
+    <Version>0.5.0</Version>
+    <Authors>Jake Lamb</Authors>
+    <Company>xray</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
