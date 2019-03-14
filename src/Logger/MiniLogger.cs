@@ -12,10 +12,10 @@ namespace Chorizo.Logger
         private readonly ILoggerOut[] _loggables;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly int _level;
-        
+
         private enum Levels
         { test, prod, dev }
-        
+
         public MiniLogger(
             LogConfig logConfig,
             ILoggerOut[] loggables = null,
@@ -26,7 +26,7 @@ namespace Chorizo.Logger
             _loggables = loggables ?? new ILoggerOut[]{new ConsoleOut(), new FileOut(_dateTimeProvider.Now())};
             _level = LevelConvert(logConfig.Level);
         }
-        
+
         public void Error(string message)
         {
             Dispatch(new Tuple<int, string>(0, message));
@@ -46,7 +46,7 @@ namespace Chorizo.Logger
         {
             return (int)(Levels) Enum.Parse(typeof(Levels), input);
         }
-       
+
         private void Dispatch(Tuple<int, string> toLog)
         {
             var (logLevel, message) = toLog;

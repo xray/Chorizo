@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Sockets;
-using Chorizo.Sockets.CzoSocket;
+using Chorizo.Sockets.InternalSocket;
 
 namespace Chorizo.Sockets.DotNetSocket
 {
@@ -25,9 +25,9 @@ namespace Chorizo.Sockets.DotNetSocket
             _wrappedSocket?.Listen(backlogSize);
         }
 
-        public IChorizoSocket Accept()
+        public IAppSocket Accept()
         {
-            return new ChorizoSocket(_wrappedSocket?.Accept());
+            return new AppSocket(_wrappedSocket?.Accept());
         }
     }
 }

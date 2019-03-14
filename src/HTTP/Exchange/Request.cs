@@ -1,9 +1,8 @@
-using System.Reflection;
 using System.Text;
 
 namespace Chorizo.HTTP.Exchange
 {
-    public struct Request
+    public readonly struct Request
     {
         public readonly string Method;
         public readonly string Path;
@@ -24,7 +23,6 @@ namespace Chorizo.HTTP.Exchange
         public Request(string method, string path, string protocol, string body) : this(method, path, protocol, new Headers(), body){}
         public Request(Request req, string body) : this(req.Method, req.Path, req.Protocol, req._headers, body){}
 
-
         public bool ContainsHeader(string name)
         {
             return _headers.ContainsHeader(name);
@@ -32,7 +30,7 @@ namespace Chorizo.HTTP.Exchange
 
         public Header GetHeader(string name)
         {
-            return _headers.GetHeader(name);
+            return _headers[name];
         }
 
         public override string ToString()

@@ -1,5 +1,5 @@
-using Chorizo.Sockets.CzoSocket;
 using Chorizo.Sockets.DotNetSocket;
+using Chorizo.Sockets.InternalSocket;
 
 namespace Chorizo.SocketMachine
 {
@@ -21,7 +21,7 @@ namespace Chorizo.SocketMachine
             BuiltInSocket.Listen(backlog);
         }
 
-        public IChorizoSocket AcceptConnection()
+        public IAppSocket AcceptConnection()
         {
             return BuiltInSocket.Accept();
         }

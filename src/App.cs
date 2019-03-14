@@ -10,7 +10,7 @@ using Chorizo.SocketMachine;
 
 namespace Chorizo
 {
-    public class Chorizo
+    public class App
     {
         private IServerStatus Status { get; }
         private ISocketMachine SocketMachine { get; }
@@ -18,7 +18,7 @@ namespace Chorizo
         private IMiniLogger Logger { get; }
         private ServerConfig Config { get; }
 
-        public Chorizo(
+        public App(
             int port = Constants.Port,
             string mode = Constants.ServerMode,
             IServerStatus serverStatus = null,

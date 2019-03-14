@@ -54,7 +54,7 @@ namespace Chorizo.Logger.Output.File
             _wrappedFileWriter.CreateDirectory(_dirPath);
             _wrappedFileWriter.WriteAllLines(_filePath, initialLines);
         }
-        
+
         private static string LogTypeIdentifier(int logLevel)
         {
             switch (logLevel)

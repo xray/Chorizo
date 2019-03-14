@@ -1,11 +1,11 @@
 using Chorizo.HTTP.Exchange;
-using Chorizo.Sockets.CzoSocket;
+using Chorizo.Sockets.InternalSocket;
 
 namespace Chorizo.HTTP.SocketReader
 {
     public interface ISocketReader
     {
-        byte[] ReadSocket(IChorizoSocket socket);
-        Request ReadBody(IChorizoSocket socket, Request req);
+        byte[] ReadSocket(IAppSocket socket);
+        Request ReadBody(IAppSocket socket, Request req);
     }
 }

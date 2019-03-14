@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Chorizo.HTTP.Exchange
 {
-    public struct Response
+    public readonly struct Response
     {
         public readonly string Protocol;
         public readonly int StatusCode;
@@ -43,7 +43,7 @@ namespace Chorizo.HTTP.Exchange
 
         public Header GetHeader(string name)
         {
-            return _headers.GetHeader(name);
+            return _headers[name];
         }
 
         public override string ToString()

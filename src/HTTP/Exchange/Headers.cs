@@ -13,14 +13,31 @@ namespace Chorizo.HTTP.Exchange
             _headers = new Header[0];
         }
 
+        public Headers(string name, string value)
+        {
+            _headers = new []{new Header(name, value)};
+        }
+
         private Headers(Header[] newHeaders)
         {
             _headers = newHeaders;
         }
 
+        public Header this[string name]
+        {
+            get
+            {
+                foreach (var header in _headers)
+                {
+                    if (header.Name == name) return header;
+                }
+                throw new KeyNotFoundException();
+            }
+        }
+
         public bool ContainsHeader(string name)
         {
-            return _headers.Any(header => string.Equals(header.Name(), name, StringComparison.CurrentCultureIgnoreCase));
+            return _headers.Any(header => string.Equals(header.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public Headers AddHeader(string name, string value)
@@ -38,15 +55,6 @@ namespace Chorizo.HTTP.Exchange
             }
 
             return new Headers(newHeaders);
-        }
-
-        public Header GetHeader(string name)
-        {
-            foreach (var header in _headers)
-            {
-                if (header.Name() == name) return header;
-            }
-            throw new KeyNotFoundException();
         }
 
         public override string ToString()
@@ -73,13 +81,13 @@ namespace Chorizo.HTTP.Exchange
             var currentLocation = 0;
             foreach (var header in _headers)
             {
-                if (header.Name().Equals(name, StringComparison.CurrentCultureIgnoreCase))
+                if (header.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     updatedHeaders[currentLocation] = new Header(name, value);
                 }
                 else
                 {
-                    updatedHeaders[currentLocation] = new Header(header.Name(), header.Value());
+                    updatedHeaders[currentLocation] = new Header(header.Name, header.Value);
                 }
 
                 currentLocation++;

@@ -4,34 +4,24 @@ namespace Chorizo.HTTP.Exchange
 {
     public struct Header
     {
-        private readonly string _name;
-        private readonly string _value;
+        public readonly string Name;
+        public readonly string Value;
 
         public Header(string name, string value)
         {
-            _name = name;
-            _value = value;
-        }
-
-        public string Name()
-        {
-            return _name;
-        }
-
-        public string Value()
-        {
-            return _value;
+            Name = name;
+            Value = value;
         }
 
         public override string ToString()
         {
-            return $"{_name}: {_value}\r\n";
+            return $"{Name}: {Value}\r\n";
         }
 
         public bool Equals(Header other)
         {
-            return string.Equals(Name(), other.Name(), StringComparison.CurrentCultureIgnoreCase) &&
-                   Value() == other.Value();
+            return string.Equals(Name, other.Name, StringComparison.CurrentCultureIgnoreCase) &&
+                   Value == other.Value;
         }
    }
 }
