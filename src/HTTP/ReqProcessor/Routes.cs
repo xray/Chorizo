@@ -4,15 +4,15 @@ namespace Chorizo.HTTP.ReqProcessor
 {
     public class Routes
     {
-        private readonly Endpoint[] _endpoints;
+        private readonly Route[] _routes;
         public Routes()
         {
-            _endpoints = new Endpoint[0];
+            _routes = new Route[0];
         }
 
-        private Routes(Endpoint[] endpoints)
+        private Routes(Route[] endpoints)
         {
-            _endpoints = endpoints;
+            _routes = endpoints;
         }
 
         public Routes Get(string path, Action action)
@@ -20,35 +20,20 @@ namespace Chorizo.HTTP.ReqProcessor
             return AddRoute("GET", path, action);
         }
 
-        public Route RetrieveRoute(string method, string path)
+        public Route? RetrieveRoute(string method, string path)
         {
-            foreach (var route in _endpoints)
-            {
-                if (route.Path == path && route.SupportsMethod(method))
-                {
+            foreach (var route in _routes)
+                if (route.Path == path && route.HttpMethod == method)
                     return route;
-                }
-            }
 
             return null;
         }
 
-        public bool HasMatchingRoute(string method, string path)
-        {
-            throw new NotImplementedException();
-        }
-
         private Routes AddRoute(string method, string path, Action action)
         {
-            if (HasMatchingRoute(method, path))
-            {
-                // replace with either a custom exception or one that indicates an attempted creation of a pre-existing route
-                throw new NotImplementedException();
-            }
-
-            var newRoutes = new Endpoint[_endpoints.Length + 1];
-            Array.Copy(_endpoints, newRoutes, _endpoints.Length);
-            newRoutes[_endpoints.Length] = new Endpoint(method, path, action);
+            var newRoutes = new Route[_routes.Length + 1];
+            Array.Copy(_routes, newRoutes, _routes.Length);
+            newRoutes[_routes.Length] = new Route(method, path, action);
 
             return new Routes(newRoutes);
         }

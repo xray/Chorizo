@@ -9,16 +9,17 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
         [Fact]
         public void GetTakesInAPathAndActionAndReturnsANewRoutesObjectWithAGetRouteForTheSpecifiedPath()
         {
-            var testRoutes = new Routes();
+            var testRoutes = new Routes()
+                .Get("/", req => new Response("HTTP/1,1", 200, "OK"));
 
-            var resultingRoutes = testRoutes.Get("/", req => new Response("HTTP/1,1", 200, "OK"));
+            var route = testRoutes.RetrieveRoute("GET", "/");
 
-            var testMatchingRoute = resultingRoutes.RetrieveRoute("GET", "/");
-
-            Assert.True(resultingRoutes.HasMatchingRoute("GET", "/"));
-            Assert.Equal("GET", testMatchingRoute.Method);
-            Assert.Equal("/", testMatchingRoute.Path);
-            Assert.IsType<Action>(testMatchingRoute.Go);
+            Assert.Equal("GET", route.Value.HttpMethod);
+            Assert.Equal("/", route.Value.Path);
+            Assert.IsType<Action>(route.Value.Action);
         }
+
+
+        // TODO: write a negative assertion for null case
     }
 }

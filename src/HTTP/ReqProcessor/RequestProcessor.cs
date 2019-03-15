@@ -12,7 +12,7 @@ namespace Chorizo.HTTP.ReqProcessor
             _currentTime = $"{dateTimeProvider.Now():R}";
         }
 
-        public Response Process(Request req)
+        public Response HandleRequest(Request req)
         {
             switch (req.Path)
             {

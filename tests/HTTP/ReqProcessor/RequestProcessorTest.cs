@@ -31,7 +31,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testResponseRetriever = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testResponseRetriever.Process(testRequest);
+            var result = testResponseRetriever.HandleRequest(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
@@ -50,7 +50,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testResponseRetriever = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testResponseRetriever.Process(testRequest);
+            var result = testResponseRetriever.HandleRequest(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
@@ -70,7 +70,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testRequestProcessor.Process(testRequest);
+            var result = testRequestProcessor.HandleRequest(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
@@ -91,7 +91,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testRequestProcessor.Process(testRequest);
+            var result = testRequestProcessor.HandleRequest(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
@@ -112,7 +112,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testRequestProcessor.Process(testRequest);
+            var result = testRequestProcessor.HandleRequest(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
@@ -133,7 +133,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testRequestProcessor.Process(testRequest);
+            var result = testRequestProcessor.HandleRequest(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
@@ -153,7 +153,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testRequestProcessor.Process(testRequest);
+            var result = testRequestProcessor.HandleRequest(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
@@ -174,7 +174,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
             var testRequestProcessor = new RequestProcessor(_mockDateTime.Object);
 
-            var result = testRequestProcessor.Process(testRequest);
+            var result = testRequestProcessor.HandleRequest(testRequest);
 
             Assert.True(testResponse.Equals(result));
         }
