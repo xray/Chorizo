@@ -1,4 +1,3 @@
-using Chorizo.Date;
 using Chorizo.HTTP;
 using Chorizo.HTTP.DataParser;
 using Chorizo.HTTP.ReqProcessor;
@@ -18,13 +17,15 @@ namespace Chorizo
         private IMiniLogger Logger { get; }
         private ServerConfig Config { get; }
 
+
         public App(
             int port = Constants.Port,
             string mode = Constants.ServerMode,
             IServerStatus serverStatus = null,
             ISocketMachine socketMachine = null,
             IProtocolConnectionHandler protocolConnectionHandler = null,
-            IMiniLogger logger = null
+            IMiniLogger logger = null,
+            Routes routes = null
         )
         {
             Config = new ServerConfig(Constants.HostName, port, mode);
@@ -35,7 +36,7 @@ namespace Chorizo
             {
                 SocketReader = new InternalSocketReader(),
                 DataParser = new RequestParser(),
-                RequestProcessor = new RequestProcessor(new DateTimeProvider())
+                RequestProcessor = new NotARouter(routes)
 
             };
             SocketMachine.Configure(Config.Port, Config.HostName);

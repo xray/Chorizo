@@ -17,15 +17,11 @@ namespace Chorizo.HTTP.ReqProcessor
             switch (req.Path)
             {
                 case "/simple_get":
-                {
                     return new Response("HTTP/1.1", 200, "OK")
                         .AddHeader("Date", _currentTime);
-                }
                 case "/echo_body":
-                {
                     return new Response("HTTP/1.1", 200, "OK", req.Body)
                         .AddHeader("Date", _currentTime);
-                }
                 case "/method_options":
                     return new Response("HTTP/1.1", 200, "OK")
                         .AddHeader("Date", _currentTime)
@@ -48,10 +44,8 @@ namespace Chorizo.HTTP.ReqProcessor
                         .AddHeader("Date", _currentTime)
                         .AddHeader("Allow", "HEAD,OPTIONS");
                 default:
-                {
                     return new Response("HTTP/1.1", 404, "Not Found")
                         .AddHeader("Date", _currentTime);
-                }
             }
         }
     }

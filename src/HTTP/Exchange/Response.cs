@@ -1,3 +1,4 @@
+using System.Net.WebSockets;
 using System.Text;
 
 namespace Chorizo.HTTP.Exchange
@@ -44,6 +45,16 @@ namespace Chorizo.HTTP.Exchange
         public Header GetHeader(string name)
         {
             return _headers[name];
+        }
+
+        public Response SetBody(string body)
+        {
+            return new Response(Protocol, StatusCode, StatusText, _headers, body);
+        }
+
+        public Response SetStatus(int statusCode, string statusText)
+        {
+            return new Response(Protocol, statusCode, statusText, _headers, Body);
         }
 
         public override string ToString()

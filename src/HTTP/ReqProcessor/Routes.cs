@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Chorizo.HTTP.ReqProcessor
 {
@@ -10,14 +11,29 @@ namespace Chorizo.HTTP.ReqProcessor
             _routes = new Route[0];
         }
 
-        private Routes(Route[] endpoints)
+        private Routes(Route[] routes)
         {
-            _routes = endpoints;
+            _routes = routes;
         }
 
         public Routes Get(string path, Action action)
         {
             return AddRoute("GET", path, action);
+        }
+
+        public Routes Post(string path, Action action)
+        {
+            return AddRoute("POST", path, action);
+        }
+
+        public Routes Put(string path, Action action)
+        {
+            return AddRoute("PUT", path, action);
+        }
+
+        public Routes Head(string path, Action action)
+        {
+            return AddRoute("HEAD", path, action);
         }
 
         public Route? RetrieveRoute(string method, string path)
@@ -36,6 +52,22 @@ namespace Chorizo.HTTP.ReqProcessor
             newRoutes[_routes.Length] = new Route(method, path, action);
 
             return new Routes(newRoutes);
+        }
+
+        public string GetAvailableMethods(string reqPath)
+        {
+            var options = new List<string>();
+            foreach (var route in _routes)
+            {
+                if (route.Path == reqPath)
+                {
+                    options.Add(route.HttpMethod);
+                    if(route.HttpMethod == "GET") options.Add("HEAD");
+                }
+            }
+            if(options.Count != 0) options.Add("OPTIONS");
+
+            return string.Join(",", options);
         }
     }
 }

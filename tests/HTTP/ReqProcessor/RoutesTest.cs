@@ -21,5 +21,17 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
 
 
         // TODO: write a negative assertion for null case
+
+        [Fact]
+        public void GetAvailableMethodsReturnsAResponseWithAllowHeaderListingAvailableMethods()
+        {
+            var testRoutes = new Routes()
+                .Get("/", req => new Response("HTTP/1.1", 200, "OK"))
+                .Post("/", req => new Response("HTTP/1.1", 200, "OK"));
+
+            var methods = testRoutes.GetAvailableMethods("/");
+
+            Assert.Equal("GET,HEAD,POST,OPTIONS", methods);
+        }
     }
 }
