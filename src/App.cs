@@ -19,13 +19,13 @@ namespace Chorizo
 
 
         public App(
+            Routes routes,
             int port = Constants.Port,
             string mode = Constants.ServerMode,
             IServerStatus serverStatus = null,
             ISocketMachine socketMachine = null,
             IProtocolConnectionHandler protocolConnectionHandler = null,
-            IMiniLogger logger = null,
-            Routes routes = null
+            IMiniLogger logger = null
         )
         {
             Config = new ServerConfig(Constants.HostName, port, mode);

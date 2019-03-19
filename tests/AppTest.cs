@@ -1,3 +1,4 @@
+using Chorizo.HTTP.ReqProcessor;
 using Chorizo.Sockets.InternalSocket;
 using Xunit;
 using Moq;
@@ -10,7 +11,7 @@ namespace Chorizo.Tests
         private readonly Mock<IServerStatus> _mockServerStatus;
         private readonly Mock<ISocketMachine> _mockSocketMachine;
         private readonly Mock<IProtocolConnectionHandler> _mockHttpHandler;
-
+        private readonly Routes _routes;
         public AppTest()
         {
             _mockCzoSocket = new Mock<IAppSocket>();
@@ -21,12 +22,14 @@ namespace Chorizo.Tests
                 .Returns(true)
                 .Returns(false);
             _mockHttpHandler = new Mock<IProtocolConnectionHandler>();
+            _routes = new Routes();
         }
 
         [Fact]
         public void Start_ShouldStartListeningOnDefaultPortAndHostNameUsingSocketMachine()
         {
             var localServer = new App(
+                _routes,
                 serverStatus: _mockServerStatus.Object,
                 socketMachine: _mockSocketMachine.Object,
                 protocolConnectionHandler:_mockHttpHandler.Object
@@ -42,6 +45,7 @@ namespace Chorizo.Tests
         public void GetsAConnectionFromTheSocketMachine()
         {
             var localServer = new App(
+                _routes,
                 serverStatus: _mockServerStatus.Object,
                 socketMachine: _mockSocketMachine.Object,
                 protocolConnectionHandler:_mockHttpHandler.Object
@@ -56,6 +60,7 @@ namespace Chorizo.Tests
         public void HandlesConnection()
         {
             var localServer = new App(
+                _routes,
                 serverStatus: _mockServerStatus.Object,
                 socketMachine: _mockSocketMachine.Object,
                 protocolConnectionHandler:_mockHttpHandler.Object
@@ -85,6 +90,7 @@ namespace Chorizo.Tests
                 .Returns(false);
 
             var localServer = new App(
+                _routes,
                 serverStatus: mockServerStatus.Object,
                 socketMachine: mockSocketMachine.Object,
                 protocolConnectionHandler:_mockHttpHandler.Object
