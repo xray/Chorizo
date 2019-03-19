@@ -36,7 +36,7 @@ namespace Chorizo
             {
                 SocketReader = new InternalSocketReader(),
                 DataParser = new RequestParser(),
-                RequestProcessor = new NotARouter(routes)
+                RequestProcessor = new RouteHandler(routes)
 
             };
             SocketMachine.Configure(Config.Port, Config.HostName);

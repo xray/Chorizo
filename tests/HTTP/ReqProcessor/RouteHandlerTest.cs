@@ -4,7 +4,7 @@ using Xunit;
 
 namespace Chorizo.Tests.HTTP.ReqProcessor
 {
-    public class NotARouterTest
+    public class RouteHandlerTest
     {
         [Fact]
         public void HandleRequestTakesInARequestForARouteThatDoesNotExistAndReturnsA404()
@@ -16,7 +16,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
                 }
             );
 
-            var router = new NotARouter(routes);
+            var router = new RouteHandler(routes);
             var request = new Request("GET", "/not-to-be-found", "HTTP/1.1");
             var result = router.HandleRequest(request);
 
@@ -33,7 +33,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
                 }
             );
 
-            var router = new NotARouter(routes);
+            var router = new RouteHandler(routes);
             var request = new Request("GET", "/test", "HTTP/1.1");
             var result = router.HandleRequest(request);
 
@@ -56,7 +56,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
                         .AddHeader("Server", "Chorizo");
                 });
 
-            var router = new NotARouter(routes);
+            var router = new RouteHandler(routes);
             var request = new Request("OPTIONS", "/test", "HTTP/1.1");
             var result = router.HandleRequest(request);
 
@@ -75,7 +75,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
                         .AddHeader("Server", "Chorizo");
                 });
 
-            var router = new NotARouter(routes);
+            var router = new RouteHandler(routes);
             var request = new Request("HEAD", "/test", "HTTP/1.1");
             var result = router.HandleRequest(request);
 
@@ -99,7 +99,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
                         .AddHeader("Server", "Chorizo");
                 });
 
-            var router = new NotARouter(routes);
+            var router = new RouteHandler(routes);
             var request = new Request("PUT", "/test", "HTTP/1.1");
             var result = router.HandleRequest(request);
 
