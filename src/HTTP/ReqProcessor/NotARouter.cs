@@ -1,5 +1,3 @@
-using System.Data;
-using System.Reflection;
 using Chorizo.HTTP.Exchange;
 
 namespace Chorizo.HTTP.ReqProcessor
@@ -17,42 +15,37 @@ namespace Chorizo.HTTP.ReqProcessor
         public Response HandleRequest(Request req)
         {
             var methods = _routes.GetAvailableMethods(req.Path);
-            if (methods != "")
+            if (methods == "") return NotFoundResponse;
+
+            if (req.Method == "OPTIONS")
             {
-                if (req.Method == "OPTIONS")
+                if (methods != "")
                 {
-                    if (methods != "")
-                    {
-                        return new Response("HTTP/1.1", 200, "OK")
-                            .AddHeader("Server", "Chorizo")
-                            .AddHeader("Allow", methods);
-                    }
-
-                    return NotFoundResponse;
+                    return new Response("HTTP/1.1", 200, "OK")
+                        .AddHeader("Server", "Chorizo")
+                        .AddHeader("Allow", methods);
                 }
 
-                if (req.Method == "HEAD")
-                {
-                    var resWithBody = _routes.RetrieveRoute("GET", req.Path)?.Handle(req);
-                    if (resWithBody == null)
-                    {
-                        return _routes.RetrieveRoute(req.Method, req.Path)?.Handle(req) ?? NotFoundResponse;
-                    }
+                return NotFoundResponse;
+            }
 
-                    return resWithBody.Value.SetBody("")
-                        .SetStatus(200, "OK");
-                }
-
+            if (req.Method != "HEAD")
                 return _routes.RetrieveRoute(req.Method, req.Path)?.Handle(req) ?? new Response(
                                "HTTP/1.1",
                                405,
                                "Method Not Allowed"
-                )
-                    .AddHeader("Server", "Chorizo")
-                    .AddHeader("Allow", methods);
+                           )
+                           .AddHeader("Server", "Chorizo")
+                           .AddHeader("Allow", methods);
+
+            var resWithBody = _routes.RetrieveRoute("GET", req.Path)?.Handle(req);
+            if (resWithBody == null)
+            {
+                return _routes.RetrieveRoute(req.Method, req.Path)?.Handle(req) ?? NotFoundResponse;
             }
 
-            return NotFoundResponse;
+            return resWithBody.Value.SetBody("")
+                .SetStatus(200, "OK");
         }
     }
 }
