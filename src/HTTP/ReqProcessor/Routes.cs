@@ -1,34 +1,38 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using Chorizo.HTTP.Exchange;
 
 namespace Chorizo.HTTP.ReqProcessor
 {
     public class Routes
     {
-        private readonly Route[] _routes;
+        private readonly List<Route> _routes;
         public Routes()
         {
-            _routes = new Route[0];
+            _routes = new List<Route>();
         }
 
-        private Routes(Route[] routes)
+        private Routes(List<Route> routes)
         {
             _routes = routes;
         }
 
         public Routes Get(string path, Action action)
         {
-            return AddRoute("GET", path, action);
+            return AddRoute("GET", path, action)
+                .AddOptionsRoute(path);
         }
 
         public Routes Post(string path, Action action)
         {
-            return AddRoute("POST", path, action);
+            return AddRoute("POST", path, action)
+                .AddOptionsRoute(path);
         }
 
         public Routes Put(string path, Action action)
         {
-            return AddRoute("PUT", path, action);
+            return AddRoute("PUT", path, action)
+                .AddOptionsRoute(path);
         }
 
         public Routes Head(string path, Action action)
@@ -38,35 +42,66 @@ namespace Chorizo.HTTP.ReqProcessor
 
         public Route? RetrieveRoute(string method, string path)
         {
-            foreach (var route in _routes)
-                if (route.Path == path && route.HttpMethod == method)
-                    return route;
+            if (_routes.Exists(route => route.HttpMethod == method && route.Path == path))
+            {
+                return _routes.Find(route => route.HttpMethod == method && route.Path == path);
+            }
 
-            return null;
+            if (_routes.Exists(route => route.Path == path))
+            {
+                return new Route(method, path, req =>
+                {
+                    return new Response(
+                            "HTTP/1.1",
+                            405,
+                            "Method Not Allowed"
+                        )
+                        .AddHeader("Server", "Chorizo")
+                        .AddHeader("Allow", GetAvailableMethods(path));
+                });
+            }
+            return new Route(method, path, req =>
+            {
+                return new Response("HTTP/1.1", 404, "Not Found")
+                    .AddHeader("Server", "Chorizo");
+            });
         }
 
         private Routes AddRoute(string method, string path, Action action)
         {
-            var newRoutes = new Route[_routes.Length + 1];
-            Array.Copy(_routes, newRoutes, _routes.Length);
-            newRoutes[_routes.Length] = new Route(method, path, action);
-
+            var newRoutes = new List<Route>(_routes) {new Route(method, path, action)};
             return new Routes(newRoutes);
         }
 
-        public string GetAvailableMethods(string reqPath)
+        private Routes AddOptionsRoute(string path)
         {
-            var options = new List<string>();
-            foreach (var route in _routes)
+            var adjustableRoutes = _routes.ToList();
+            var optionsIndex = adjustableRoutes.FindIndex(route => route.Path == path && route.HttpMethod == "OPTIONS");
+            if (optionsIndex != -1)
+            {
+                adjustableRoutes.RemoveAt(optionsIndex);
+            }
+
+            return new Routes(adjustableRoutes).AddRoute("OPTIONS", path, req =>
+            {
+                return new Response("HTTP/1.1", 200, "OK")
+                    .AddHeader("Server", "Chorizo")
+                    .AddHeader("Allow", GetAvailableMethods(path, adjustableRoutes));
+            });
+        }
+        private string GetAvailableMethods(string reqPath, IEnumerable<Route> routes = null)
+        {
+            routes = routes ?? _routes;
+            var options = new HashSet<string>();
+            foreach (var route in routes)
             {
                 if (route.Path == reqPath)
                 {
+                    if (route.HttpMethod == "GET") options.Add("HEAD");
                     options.Add(route.HttpMethod);
-                    if(route.HttpMethod == "GET") options.Add("HEAD");
                 }
             }
-            if(options.Count != 0) options.Add("OPTIONS");
-
+            options.Add("OPTIONS");
             return string.Join(",", options);
         }
     }

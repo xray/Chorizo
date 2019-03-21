@@ -61,7 +61,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
             var result = router.HandleRequest(request);
 
             Assert.Equal("Chorizo", result.GetHeader("Server").Value);
-            Assert.Equal("GET,HEAD,POST,OPTIONS", result.GetHeader("Allow").Value);
+            Assert.Equal("HEAD,GET,POST,OPTIONS", result.GetHeader("Allow").Value);
             Assert.Equal(200, result.StatusCode);
         }
 
@@ -103,7 +103,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
             var request = new Request("PUT", "/test", "HTTP/1.1");
             var result = router.HandleRequest(request);
 
-            Assert.Equal("GET,HEAD,POST,OPTIONS", result.GetHeader("Allow").Value);
+            Assert.Equal("HEAD,GET,POST,OPTIONS", result.GetHeader("Allow").Value);
             Assert.Equal("Chorizo", result.GetHeader("Server").Value);
             Assert.Equal(405, result.StatusCode);
         }
