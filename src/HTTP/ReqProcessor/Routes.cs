@@ -92,16 +92,13 @@ namespace Chorizo.HTTP.ReqProcessor
         private string GetAvailableMethods(string reqPath, IEnumerable<Route> routes = null)
         {
             routes = routes ?? _routes;
-            var options = new HashSet<string>();
+            var options = new HashSet<string>{"OPTIONS"};
             foreach (var route in routes)
             {
-                if (route.Path == reqPath)
-                {
-                    if (route.HttpMethod == "GET") options.Add("HEAD");
-                    options.Add(route.HttpMethod);
-                }
+                if (route.Path != reqPath) continue;
+                if (route.HttpMethod == "GET") options.Add("HEAD");
+                options.Add(route.HttpMethod);
             }
-            options.Add("OPTIONS");
             return string.Join(",", options);
         }
     }

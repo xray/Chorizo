@@ -32,7 +32,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
             Assert.Equal("/", route.Value.Path);
             var foundRequest = route.Value.Action.Invoke(request);
 
-            Assert.Equal("POST,OPTIONS", foundRequest.GetHeader("Allow").Value);
+            Assert.Equal("OPTIONS,POST", foundRequest.GetHeader("Allow").Value);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
             Assert.Equal("OPTIONS", route.Value.HttpMethod);
             Assert.Equal("/", route.Value.Path);
             var foundRequest = route.Value.Action.Invoke(request);
-            Assert.Equal("POST,PUT,OPTIONS", foundRequest.GetHeader("Allow").Value);
+            Assert.Equal("OPTIONS,POST,PUT", foundRequest.GetHeader("Allow").Value);
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Chorizo.Tests.HTTP.ReqProcessor
             Assert.Equal(405, resultingResponse.StatusCode);
             Assert.Equal("Method Not Allowed", resultingResponse.StatusText);
             Assert.Equal("HTTP/1.1", resultingResponse.Protocol);
-            Assert.Equal("HEAD,GET,POST,OPTIONS", resultingResponse.GetHeader("Allow").Value);
+            Assert.Equal("OPTIONS,HEAD,GET,POST", resultingResponse.GetHeader("Allow").Value);
         }
     }
 }
