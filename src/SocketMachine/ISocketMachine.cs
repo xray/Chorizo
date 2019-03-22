@@ -1,4 +1,4 @@
-using Chorizo.Sockets.CzoSocket;
+using Chorizo.Sockets.InternalSocket;
 
 namespace Chorizo
 {
@@ -6,6 +6,6 @@ namespace Chorizo
     {
         void Configure(int port, string hostName);
         void Listen(int backlog);
-        IChorizoSocket AcceptConnection();
+        IAppSocket AcceptConnection();
     }
 }

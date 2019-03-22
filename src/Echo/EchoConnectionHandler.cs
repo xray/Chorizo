@@ -2,7 +2,7 @@ using System;
 using System.Net.Sockets;
 using System.Text;
 using Chorizo.Logger;
-using Chorizo.Sockets.CzoSocket;
+using Chorizo.Sockets.InternalSocket;
 
 namespace Chorizo.Echo
 {
@@ -14,20 +14,20 @@ namespace Chorizo.Echo
             _optionalLogger = optionalLogger;
         }
 
-        public void HandleRequest(IChorizoSocket chorizoSocket)
+        public void HandleRequest(IAppSocket appSocket)
         {
-            var retrievedData = retrieveData(chorizoSocket);
-            echoData(chorizoSocket, retrievedData);
+            var retrievedData = retrieveData(appSocket);
+            echoData(appSocket, retrievedData);
         }
 
-        private string retrieveData(IChorizoSocket chorizoSocket)
+        private string retrieveData(IAppSocket appSocket)
         {
             var bufferText = "";
             var receivedData = new byte[0];
 
             while (bufferText.IndexOf("\n") == -1)
             {
-                var (data, dataLength) = chorizoSocket.Receive(1);
+                var (data, dataLength) = appSocket.Receive(1);
                 var originalLength = receivedData.Length;
                 Array.Resize(ref receivedData, originalLength + dataLength);
                 Array.Copy(data, 0, receivedData, originalLength, dataLength);
@@ -37,12 +37,12 @@ namespace Chorizo.Echo
             return bufferText;
         }
 
-        private void echoData(IChorizoSocket chorizoSocket, string toEcho)
+        private void echoData(IAppSocket appSocket, string toEcho)
         {
             byte[] msg = Encoding.ASCII.GetBytes(toEcho);
-            chorizoSocket.Send(msg);
+            appSocket.Send(msg);
             _optionalLogger?.Info("Sent Back the data, closing the connection...");
-            chorizoSocket.Disconnect(SocketShutdown.Both);
+            appSocket.Disconnect(SocketShutdown.Both);
         }
     }
 }

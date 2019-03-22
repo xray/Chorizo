@@ -1,12 +1,12 @@
 using System;
 using System.Net.Sockets;
 
-namespace Chorizo.Sockets.CzoSocket
+namespace Chorizo.Sockets.InternalSocket
 {
-    public class ChorizoSocket : IChorizoSocket
+    public class AppSocket : IAppSocket
     {
         private readonly Socket _wrappedSocket;
-        public ChorizoSocket(Socket toWrap)
+        public AppSocket(Socket toWrap)
         {
             _wrappedSocket = toWrap;
         }

@@ -17,7 +17,7 @@ namespace Chorizo.Tests.Logger
             _mockDateTime = new Mock<IDateTimeProvider>();
             _mockDateTime.Setup(dt => dt.Now()).Returns(_testTime);
         }
-        
+
         [Fact]
         public void WhenConfiguredWithDevLevelDisplayAllLogs()
         {
@@ -27,15 +27,15 @@ namespace Chorizo.Tests.Logger
                 new []{mockUIOut.Object},
                 _mockDateTime.Object
             );
-            
+
             const string testMsgOne = "Message 1";
             const string testMsgTwo = "Message 2";
             const string testMsgThree = "Message 3";
-            
+
             miniLogger.Error(testMsgOne);
             miniLogger.Info(testMsgTwo);
             miniLogger.Warning(testMsgThree);
-            
+
             mockUIOut.Verify(ui => ui.Out(testMsgOne, 0, _testTime));
             mockUIOut.Verify(ui => ui.Out(testMsgTwo, 1, _testTime));
             mockUIOut.Verify(ui => ui.Out(testMsgThree, 2, _testTime));
@@ -51,20 +51,20 @@ namespace Chorizo.Tests.Logger
                 new []{mockUIOut.Object},
                 _mockDateTime.Object
             );
-            
+
             const string testMsgOne = "Message 1";
             const string testMsgTwo = "Message 2";
             const string testMsgThree = "Message 3";
-            
+
             miniLogger.Error(testMsgOne);
             miniLogger.Info(testMsgTwo);
             miniLogger.Warning(testMsgThree);
-            
+
             mockUIOut.Verify(ui => ui.Out(testMsgOne, 0, _testTime));
             mockUIOut.Verify(ui => ui.Out(testMsgTwo, 1, _testTime));
             mockUIOut.Verify(ui => ui.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Exactly(2));
         }
-        
+
         [Fact]
         public void WhenConfiguredWithTestLevelDisplayOnlyErrors()
         {
@@ -74,15 +74,15 @@ namespace Chorizo.Tests.Logger
                 new []{ mockUIOut.Object },
                 _mockDateTime.Object
             );
-            
+
             const string testMsgOne = "Message 1";
             const string testMsgTwo = "Message 2";
             const string testMsgThree = "Message 3";
-            
+
             miniLogger.Error(testMsgOne);
             miniLogger.Info(testMsgTwo);
             miniLogger.Warning(testMsgThree);
-            
+
             mockUIOut.Verify(ui => ui.Out(testMsgOne, 0, _testTime));
             mockUIOut.Verify(ui => ui.Out(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<DateTime>()), Times.Once);
         }

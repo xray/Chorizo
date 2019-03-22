@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Chorizo.HTTP.Exchange;
 using Chorizo.HTTP.SocketReader;
-using Chorizo.Sockets.CzoSocket;
+using Chorizo.Sockets.InternalSocket;
 using Moq;
 using Xunit;
 
@@ -18,7 +18,7 @@ namespace Chorizo.Tests.HTTP.SocketReader
                                        "\r\n";
             var testGetRequestBytes = Encoding.UTF8.GetBytes(testGetRequestString);
 
-            var mockSocket = new Mock<IChorizoSocket>();
+            var mockSocket = new Mock<IAppSocket>();
             var byteCount = 0;
             mockSocket.Setup(sock => sock.Receive(It.IsAny<int>()))
                 .Returns(() => new Tuple<byte[], int>(new[] {testGetRequestBytes[byteCount++]}, 1));
@@ -39,7 +39,7 @@ namespace Chorizo.Tests.HTTP.SocketReader
                 .AddHeader("Content-Length", "9");
             var testRequest = new Request("POST", "/echo_body", "HTTP/1.1", testHeaders);
 
-            var mockSocket = new Mock<IChorizoSocket>();
+            var mockSocket = new Mock<IAppSocket>();
             mockSocket.Setup(sock => sock.Receive(It.IsAny<int>()))
                 .Returns(new Tuple<byte[], int>(testBody, 9));
 
@@ -55,7 +55,7 @@ namespace Chorizo.Tests.HTTP.SocketReader
         {
             var testRequest = new Request("POST", "/echo_body", "HTTP/1.1");
 
-            var mockSocket = new Mock<IChorizoSocket>();
+            var mockSocket = new Mock<IAppSocket>();
 
             var result = new InternalSocketReader().ReadBody(mockSocket.Object, testRequest);
 

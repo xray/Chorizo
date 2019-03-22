@@ -9,27 +9,25 @@ namespace Chorizo.Tests.HTTP.Exchange
         [Fact]
         public void AddHeaderTakesInANameAndValueAndReturnsANewHeadersWithTheAdditionalHeader()
         {
-            var testHeaders = new Headers();
+            var testHeaders = new Headers("test", "header");
 
-            var updatedHeaders = testHeaders.AddHeader("test", "header");
+            var updatedHeaders = testHeaders.AddHeader("additional", "header");
 
-            var addedHeader = updatedHeaders.GetHeader("test");
-            Assert.Equal("test", addedHeader.Name());
-            Assert.Equal("header", addedHeader.Value());
+            var addedHeader = updatedHeaders["additional"];
+            Assert.Equal("additional", addedHeader.Name);
+            Assert.Equal("header", addedHeader.Value);
         }
 
         [Fact]
         public void AddHeaderTakesInANameAndValueAndReplacesTheExistingHeaderWhenANamingConflictOccurs()
         {
-            var testHeaders = new Headers()
-                .AddHeader("test", "header");
-
+            var testHeaders = new Headers("test", "header");
 
             var updatedHeaders = testHeaders.AddHeader("test", "NewValue");
 
-            var changedHeader = updatedHeaders.GetHeader("test");
-            Assert.Equal("test", changedHeader.Name());
-            Assert.Equal("NewValue", changedHeader.Value());
+            var changedHeader = updatedHeaders["test"];
+            Assert.Equal("test", changedHeader.Name);
+            Assert.Equal("NewValue", changedHeader.Value);
         }
 
         [Theory]
@@ -38,46 +36,42 @@ namespace Chorizo.Tests.HTTP.Exchange
         [InlineData("TEST")]
         public void ContainsHeaderTakesInAStringAndReturnsTrueWhenAMatchingHeaderExists(string dynamicName)
         {
-            var testHeaders = new Headers();
+            var testHeaders = new Headers(dynamicName, "header");
 
-            var updatedHeaders = testHeaders.AddHeader(dynamicName, "header");
-
-            Assert.True(updatedHeaders.ContainsHeader("test"));
+            Assert.True(testHeaders.ContainsHeader("test"));
         }
 
         [Fact]
         public void ContainsHeaderTakesInAStringAndReturnsFalseWhenNoMatchingHeaderExists()
         {
-            var testHeaders = new Headers();
+            var testHeaders = new Headers("hello", "world");
 
             Assert.False(testHeaders.ContainsHeader("test"));
         }
 
         [Fact]
-        public void GetHeaderReturnsAHeaderWhenAMatchExists()
+        public void IndexingAHeadersObjectWithANameStringWillReturnAHeaderWhenAMatchExists()
         {
-            var headers = new Headers();
-            var updatedHeaders = headers.AddHeader("test", "header");
+            var headers = new Headers("test", "header");
 
-            var foundHeader = updatedHeaders.GetHeader("test");
+            var foundHeader = headers["test"];
 
-            Assert.Equal("test", foundHeader.Name());
-            Assert.Equal("header", foundHeader.Value());
+            Assert.Equal("test", foundHeader.Name);
+            Assert.Equal("header", foundHeader.Value);
         }
 
         [Fact]
-        public void GetHeaderThrowsAKeyNotFoundExceptionWhenNoMatchExists()
+        public void IndexingAHeadersObjectWithANameStringWillThrowAKeyNotFoundExceptionWhenNoMatchExists()
         {
-            var headers = new Headers();
+            var headers = new Headers("hello", "world");
 
-            Assert.Throws<KeyNotFoundException>(() => headers.GetHeader("test"));
+            Assert.Throws<KeyNotFoundException>(() => headers["test"]);
         }
 
         [Fact]
         public void ToStringUsesTheHeadersPropertyToBuildAStringRepresentationOfHeaders()
         {
-            var testHeaders = new Headers()
-                .AddHeader("test1", "1")
+            var testHeaders = new Headers("test1", "1")
                 .AddHeader("test2", "2")
                 .AddHeader("test3", "3");
 
@@ -91,12 +85,10 @@ namespace Chorizo.Tests.HTTP.Exchange
         [Fact]
         public void EqualsTakesInASecondaryHeadersAndReturnsTrueWhenTheyContainTheSameInformation()
         {
-            var testHeaders = new Headers()
-                .AddHeader("testOne", "One")
+            var testHeaders = new Headers("testOne", "One")
                 .AddHeader("testTwo", "Two");
 
-            var testHeadersToCompare = new Headers()
-                .AddHeader("testOne", "One")
+            var testHeadersToCompare = new Headers("testOne", "One")
                 .AddHeader("testTwo", "Two");
 
             Assert.True(testHeaders.Equals(testHeadersToCompare));
@@ -105,12 +97,10 @@ namespace Chorizo.Tests.HTTP.Exchange
         [Fact]
         public void EqualsTakesInASecondaryHeadersAndReturnsFalseWhenTheyContainDifferentInformation()
         {
-            var testHeaders = new Headers()
-                .AddHeader("testOne", "One")
+            var testHeaders = new Headers("testOne", "One")
                 .AddHeader("testTwo", "Two");
 
-            var testHeadersToCompare = new Headers()
-                .AddHeader("headerOne", "One")
+            var testHeadersToCompare = new Headers("headerOne", "One")
                 .AddHeader("testTwo", "Two");
 
             Assert.False(testHeaders.Equals(testHeadersToCompare));

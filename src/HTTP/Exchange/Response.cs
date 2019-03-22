@@ -1,33 +1,15 @@
+using System.Net.WebSockets;
 using System.Text;
 
 namespace Chorizo.HTTP.Exchange
 {
-    public struct Response
+    public readonly struct Response
     {
         public readonly string Protocol;
         public readonly int StatusCode;
         public readonly string StatusText;
         private readonly Headers _headers;
         public readonly string Body;
-
-        public Response(string protocol, int statusCode, string statusText)
-        {
-            Protocol = protocol;
-            StatusCode = statusCode;
-            StatusText = statusText;
-            _headers = new Headers();
-            Body = "";
-        }
-
-        public Response(string protocol, int statusCode, string statusText, string body)
-        {
-            Protocol = protocol;
-            StatusCode = statusCode;
-            StatusText = statusText;
-            Body = body;
-            _headers = new Headers()
-                .AddHeader("Content-Length", Encoding.UTF8.GetBytes(body).Length.ToString());
-        }
 
         private Response(string protocol, int statusCode, string statusText, Headers headers, string body)
         {
@@ -37,6 +19,17 @@ namespace Chorizo.HTTP.Exchange
             _headers = headers;
             Body = body;
         }
+
+        public Response(string protocol, int statusCode, string statusText) : this(protocol, statusCode, statusText, new Headers(), ""){}
+
+        public Response(string protocol, int statusCode, string statusText, string body): this(
+            protocol,
+            statusCode,
+            statusText,
+            new Headers()
+                .AddHeader("Content-Length", Encoding.UTF8.GetBytes(body).Length.ToString()),
+            body
+        ){}
 
         public Response AddHeader(string name, string value)
         {
@@ -51,7 +44,17 @@ namespace Chorizo.HTTP.Exchange
 
         public Header GetHeader(string name)
         {
-            return _headers.GetHeader(name);
+            return _headers[name];
+        }
+
+        public Response SetBody(string body)
+        {
+            return new Response(Protocol, StatusCode, StatusText, _headers, body);
+        }
+
+        public Response SetStatus(int statusCode, string statusText)
+        {
+            return new Response(Protocol, statusCode, statusText, _headers, Body);
         }
 
         public override string ToString()

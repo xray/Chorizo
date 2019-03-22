@@ -1,19 +1,20 @@
-using Chorizo.Sockets.CzoSocket;
+using Chorizo.HTTP.ReqProcessor;
+using Chorizo.Sockets.InternalSocket;
 using Xunit;
 using Moq;
 
 namespace Chorizo.Tests
 {
-    public class ChorizoServerTest
+    public class AppTest
     {
-        private readonly Mock<IChorizoSocket> _mockCzoSocket;
+        private readonly Mock<IAppSocket> _mockCzoSocket;
         private readonly Mock<IServerStatus> _mockServerStatus;
         private readonly Mock<ISocketMachine> _mockSocketMachine;
         private readonly Mock<IProtocolConnectionHandler> _mockHttpHandler;
-
-        public ChorizoServerTest()
+        private readonly Routes _routes;
+        public AppTest()
         {
-            _mockCzoSocket = new Mock<IChorizoSocket>();
+            _mockCzoSocket = new Mock<IAppSocket>();
             _mockSocketMachine = new Mock<ISocketMachine>();
             _mockSocketMachine.Setup(sm => sm.AcceptConnection()).Returns(_mockCzoSocket.Object);
             _mockServerStatus = new Mock<IServerStatus>();
@@ -21,12 +22,14 @@ namespace Chorizo.Tests
                 .Returns(true)
                 .Returns(false);
             _mockHttpHandler = new Mock<IProtocolConnectionHandler>();
+            _routes = new Routes();
         }
 
         [Fact]
         public void Start_ShouldStartListeningOnDefaultPortAndHostNameUsingSocketMachine()
         {
-            var localServer = new Chorizo(
+            var localServer = new App(
+                _routes,
                 serverStatus: _mockServerStatus.Object,
                 socketMachine: _mockSocketMachine.Object,
                 protocolConnectionHandler:_mockHttpHandler.Object
@@ -41,7 +44,8 @@ namespace Chorizo.Tests
         [Fact]
         public void GetsAConnectionFromTheSocketMachine()
         {
-            var localServer = new Chorizo(
+            var localServer = new App(
+                _routes,
                 serverStatus: _mockServerStatus.Object,
                 socketMachine: _mockSocketMachine.Object,
                 protocolConnectionHandler:_mockHttpHandler.Object
@@ -55,7 +59,8 @@ namespace Chorizo.Tests
         [Fact]
         public void HandlesConnection()
         {
-            var localServer = new Chorizo(
+            var localServer = new App(
+                _routes,
                 serverStatus: _mockServerStatus.Object,
                 socketMachine: _mockSocketMachine.Object,
                 protocolConnectionHandler:_mockHttpHandler.Object
@@ -72,8 +77,8 @@ namespace Chorizo.Tests
             var mockSocketMachine = new Mock<ISocketMachine>();
 
             var mockServerStatus = new Mock<IServerStatus>();
-            var testSockOne = new Mock<IChorizoSocket>();
-            var testSockTwo = new Mock<IChorizoSocket>();
+            var testSockOne = new Mock<IAppSocket>();
+            var testSockTwo = new Mock<IAppSocket>();
 
             mockSocketMachine.SetupSequence(sm => sm.AcceptConnection())
                 .Returns(testSockOne.Object)
@@ -84,7 +89,8 @@ namespace Chorizo.Tests
                 .Returns(true)
                 .Returns(false);
 
-            var localServer = new Chorizo(
+            var localServer = new App(
+                _routes,
                 serverStatus: mockServerStatus.Object,
                 socketMachine: mockSocketMachine.Object,
                 protocolConnectionHandler:_mockHttpHandler.Object

@@ -1,7 +1,7 @@
 using System;
 using System.Net.Sockets;
 using Chorizo.Echo;
-using Chorizo.Sockets.CzoSocket;
+using Chorizo.Sockets.InternalSocket;
 using Moq;
 using Xunit;
 
@@ -14,7 +14,7 @@ namespace Chorizo.Tests.Echo
         {
             var testHandler = new EchoConnectionHandler();
             var testNums = new byte[] {70, 79, 79, 10};
-            var mockCzoSocket = new Mock<IChorizoSocket>();
+            var mockCzoSocket = new Mock<IAppSocket>();
             mockCzoSocket.SetupSequence(sock => sock.Receive(It.IsAny<int>()))
                 .Returns(new Tuple<byte[], int>(new byte[] {70}, 1))
                 .Returns(new Tuple<byte[], int>(new byte[] {79}, 1))

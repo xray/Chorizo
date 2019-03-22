@@ -4,6 +4,6 @@ namespace Chorizo.HTTP.ReqProcessor
 {
     public interface IRequestProcessor
     {
-        Response Process(Request req);
+        Response HandleRequest(Request req);
     }
 }

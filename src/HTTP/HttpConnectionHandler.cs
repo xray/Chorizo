@@ -2,7 +2,7 @@ using System.Net.Sockets;
 using Chorizo.HTTP.DataParser;
 using Chorizo.HTTP.ReqProcessor;
 using Chorizo.HTTP.SocketReader;
-using Chorizo.Sockets.CzoSocket;
+using Chorizo.Sockets.InternalSocket;
 
 namespace Chorizo.HTTP {
     public class HttpConnectionHandler : IProtocolConnectionHandler {
@@ -11,11 +11,11 @@ namespace Chorizo.HTTP {
         public IDataParser DataParser { get; set; }
         public IRequestProcessor RequestProcessor { get; set; }
 
-        public void HandleRequest(IChorizoSocket socket) {
+        public void HandleRequest(IAppSocket socket) {
             var bytes = SocketReader.ReadSocket(socket);
             var request = DataParser.Parse(bytes);
             var requestWithBody = SocketReader.ReadBody(socket, request);
-            var response = RequestProcessor.Process(requestWithBody);
+            var response = RequestProcessor.HandleRequest(requestWithBody);
             socket.Send(response.ToByteArray());
             socket.Disconnect(SocketShutdown.Both);
         }

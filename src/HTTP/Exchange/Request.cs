@@ -1,9 +1,8 @@
-using System.Reflection;
 using System.Text;
 
 namespace Chorizo.HTTP.Exchange
 {
-    public struct Request
+    public readonly struct Request
     {
         public readonly string Method;
         public readonly string Path;
@@ -11,34 +10,7 @@ namespace Chorizo.HTTP.Exchange
         private readonly Headers _headers;
         public readonly string Body;
 
-        public Request(string method, string path, string protocol)
-        {
-            Method = method;
-            Path = path;
-            Protocol = protocol;
-            _headers = new Headers();
-            Body = null;
-        }
-
-        public Request(string method, string path, string protocol, string body)
-        {
-            Method = method;
-            Path = path;
-            Protocol = protocol;
-            _headers = new Headers();
-            Body = body;
-        }
-
-        public Request(string method, string path, string protocol, Headers headers)
-        {
-            Method = method;
-            Path = path;
-            Protocol = protocol;
-            _headers = headers;
-            Body = null;
-        }
-
-        public Request(string method, string path, string protocol, Headers headers, string body)
+        public Request(string method, string path, string protocol, Headers headers, string body = "")
         {
             Method = method;
             Path = path;
@@ -47,14 +19,9 @@ namespace Chorizo.HTTP.Exchange
             Body = body;
         }
 
-        public Request(Request req, string body)
-        {
-            Method = req.Method;
-            Path = req.Path;
-            Protocol = req.Protocol;
-            _headers = req._headers;
-            Body = body;
-        }
+        public Request(string method, string path, string protocol) : this(method, path, protocol, new Headers()){}
+        public Request(string method, string path, string protocol, string body) : this(method, path, protocol, new Headers(), body){}
+        public Request(Request req, string body) : this(req.Method, req.Path, req.Protocol, req._headers, body){}
 
         public bool ContainsHeader(string name)
         {
@@ -63,7 +30,7 @@ namespace Chorizo.HTTP.Exchange
 
         public Header GetHeader(string name)
         {
-            return _headers.GetHeader(name);
+            return _headers[name];
         }
 
         public override string ToString()
